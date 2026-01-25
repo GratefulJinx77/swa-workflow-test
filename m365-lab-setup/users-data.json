@@ -1,0 +1,154 @@
+{
+  "executives": [
+    {"displayName": "Jean-Luc Picard", "mailNickname": "jpicard", "jobTitle": "Chief Executive Officer", "department": "Executive", "location": "NYC", "manager": null, "license": true},
+    {"displayName": "Tony Stark", "mailNickname": "tstark", "jobTitle": "Chief Technology Officer", "department": "Executive", "location": "NYC", "manager": "jpicard", "license": true},
+    {"displayName": "Scrooge McDuck", "mailNickname": "smcduck", "jobTitle": "Chief Financial Officer", "department": "Executive", "location": "NYC", "manager": "jpicard", "license": true},
+    {"displayName": "Miranda Priestly", "mailNickname": "mpriestly", "jobTitle": "Chief Operating Officer", "department": "Executive", "location": "NYC", "manager": "jpicard", "license": true},
+    {"displayName": "Don Draper", "mailNickname": "ddraper", "jobTitle": "Chief Marketing Officer", "department": "Executive", "location": "NYC", "manager": "jpicard", "license": true}
+  ],
+  "engineering": {
+    "vps": [
+      {"displayName": "Felicity Smoak", "mailNickname": "fsmoak", "jobTitle": "VP Engineering", "department": "Engineering", "location": "NYC", "manager": "tstark", "license": true},
+      {"displayName": "Shuri Wakanda", "mailNickname": "swakanda", "jobTitle": "VP Engineering", "department": "Engineering", "location": "London", "manager": "tstark", "license": true},
+      {"displayName": "Q Branch", "mailNickname": "qbranch", "jobTitle": "VP Engineering", "department": "Engineering", "location": "Phoenix", "manager": "tstark", "license": true}
+    ],
+    "managers": [
+      {"displayName": "Neo Matrix", "mailNickname": "nmatrix", "jobTitle": "Engineering Manager", "department": "Engineering", "location": "NYC", "manager": "fsmoak", "license": true},
+      {"displayName": "Trinity Code", "mailNickname": "tcode", "jobTitle": "Engineering Manager", "department": "Engineering", "location": "NYC", "manager": "fsmoak", "license": true},
+      {"displayName": "Morpheus Debug", "mailNickname": "mdebug", "jobTitle": "Engineering Manager", "department": "Engineering", "location": "London", "manager": "swakanda", "license": true},
+      {"displayName": "Oracle Query", "mailNickname": "oquery", "jobTitle": "Engineering Manager", "department": "Engineering", "location": "London", "manager": "swakanda", "license": true},
+      {"displayName": "Tank Operator", "mailNickname": "toperator", "jobTitle": "Engineering Manager", "department": "Engineering", "location": "Phoenix", "manager": "qbranch", "license": true},
+      {"displayName": "Cypher Smith", "mailNickname": "csmith", "jobTitle": "Engineering Manager", "department": "Engineering", "location": "Phoenix", "manager": "qbranch", "license": true}
+    ],
+    "engineers": [
+      {"displayName": "Agent Smith", "mailNickname": "asmith", "jobTitle": "Senior Software Engineer", "department": "Engineering", "location": "NYC", "manager": "nmatrix", "license": false},
+      {"displayName": "Link Architect", "mailNickname": "larchitect", "jobTitle": "Software Engineer", "department": "Engineering", "location": "NYC", "manager": "nmatrix", "license": false},
+      {"displayName": "Niobe Captain", "mailNickname": "ncaptain", "jobTitle": "Software Engineer", "department": "Engineering", "location": "NYC", "manager": "nmatrix", "license": false},
+      {"displayName": "Switch Toggle", "mailNickname": "stoggle", "jobTitle": "Software Engineer", "department": "Engineering", "location": "NYC", "manager": "tcode", "license": false},
+      {"displayName": "Apoc Runtime", "mailNickname": "aruntime", "jobTitle": "Software Engineer", "department": "Engineering", "location": "NYC", "manager": "tcode", "license": false},
+      {"displayName": "Mouse Click", "mailNickname": "mclick", "jobTitle": "Junior Software Engineer", "department": "Engineering", "location": "NYC", "manager": "tcode", "license": false},
+      {"displayName": "Seraph Guardian", "mailNickname": "sguardian", "jobTitle": "Senior Software Engineer", "department": "Engineering", "location": "London", "manager": "mdebug", "license": false},
+      {"displayName": "Merovingian Data", "mailNickname": "mdata", "jobTitle": "Software Engineer", "department": "Engineering", "location": "London", "manager": "mdebug", "license": false},
+      {"displayName": "Persephone Cache", "mailNickname": "pcache", "jobTitle": "Software Engineer", "department": "Engineering", "location": "London", "manager": "mdebug", "license": false},
+      {"displayName": "Keymaker Lock", "mailNickname": "klock", "jobTitle": "Senior Software Engineer", "department": "Engineering", "location": "London", "manager": "oquery", "license": false},
+      {"displayName": "Trainman Route", "mailNickname": "troute", "jobTitle": "Software Engineer", "department": "Engineering", "location": "London", "manager": "oquery", "license": false},
+      {"displayName": "Rama Kandra", "mailNickname": "rkandra", "jobTitle": "Junior Software Engineer", "department": "Engineering", "location": "London", "manager": "oquery", "license": false},
+      {"displayName": "Sati Program", "mailNickname": "sprogram", "jobTitle": "Senior Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "toperator", "license": false},
+      {"displayName": "Lock Commander", "mailNickname": "lcommander", "jobTitle": "Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "toperator", "license": false},
+      {"displayName": "Ghost Protocol", "mailNickname": "gprotocol", "jobTitle": "Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "toperator", "license": false},
+      {"displayName": "Vector Binary", "mailNickname": "vbinary", "jobTitle": "Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "csmith", "license": false},
+      {"displayName": "Daemon Process", "mailNickname": "dprocess", "jobTitle": "Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "csmith", "license": false},
+      {"displayName": "Kernel Panic", "mailNickname": "kpanic", "jobTitle": "Junior Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "csmith", "license": false},
+      {"displayName": "Bit Flipper", "mailNickname": "bflipper", "jobTitle": "Software Engineer", "department": "Engineering", "location": "NYC", "manager": "nmatrix", "license": false},
+      {"displayName": "Stack Overflow", "mailNickname": "soverflow", "jobTitle": "Software Engineer", "department": "Engineering", "location": "London", "manager": "mdebug", "license": false},
+      {"displayName": "Null Pointer", "mailNickname": "npointer", "jobTitle": "Software Engineer", "department": "Engineering", "location": "Phoenix", "manager": "toperator", "license": false}
+    ]
+  },
+  "product": {
+    "vp": {"displayName": "Steve Rogers", "mailNickname": "srogers", "jobTitle": "VP Product", "department": "Product", "location": "NYC", "manager": "tstark", "license": true},
+    "managers": [
+      {"displayName": "Pepper Potts", "mailNickname": "ppotts", "jobTitle": "Product Manager", "department": "Product", "location": "NYC", "manager": "srogers", "license": true},
+      {"displayName": "Happy Hogan", "mailNickname": "hhogan", "jobTitle": "Product Manager", "department": "Product", "location": "London", "manager": "srogers", "license": true},
+      {"displayName": "James Rhodes", "mailNickname": "jrhodes", "jobTitle": "Product Manager", "department": "Product", "location": "Phoenix", "manager": "srogers", "license": true}
+    ],
+    "analysts": [
+      {"displayName": "Peter Parker", "mailNickname": "pparker", "jobTitle": "Product Analyst", "department": "Product", "location": "NYC", "manager": "ppotts", "license": false},
+      {"displayName": "Ned Leeds", "mailNickname": "nleeds", "jobTitle": "Product Analyst", "department": "Product", "location": "NYC", "manager": "ppotts", "license": false},
+      {"displayName": "MJ Watson", "mailNickname": "mjwatson", "jobTitle": "Product Analyst", "department": "Product", "location": "London", "manager": "hhogan", "license": false},
+      {"displayName": "Betty Brant", "mailNickname": "bbrant", "jobTitle": "Product Analyst", "department": "Product", "location": "London", "manager": "hhogan", "license": false},
+      {"displayName": "Flash Thompson", "mailNickname": "fthompson", "jobTitle": "Product Analyst", "department": "Product", "location": "Phoenix", "manager": "jrhodes", "license": false},
+      {"displayName": "May Parker", "mailNickname": "mparker", "jobTitle": "Product Analyst", "department": "Product", "location": "Phoenix", "manager": "jrhodes", "license": false}
+    ]
+  },
+  "design": {
+    "cdo": {"displayName": "Edna Mode", "mailNickname": "emode", "jobTitle": "Chief Design Officer", "department": "Design", "location": "NYC", "manager": "jpicard", "license": true},
+    "managers": [
+      {"displayName": "Bob Ross", "mailNickname": "bross", "jobTitle": "Design Manager", "department": "Design", "location": "NYC", "manager": "emode", "license": true},
+      {"displayName": "Andy Warhol", "mailNickname": "awarhol", "jobTitle": "Design Manager", "department": "Design", "location": "London", "manager": "emode", "license": true},
+      {"displayName": "Frida Kahlo", "mailNickname": "fkahlo", "jobTitle": "Design Manager", "department": "Design", "location": "Phoenix", "manager": "emode", "license": true}
+    ],
+    "designers": [
+      {"displayName": "Georgia OKeeffe", "mailNickname": "gokeeffe", "jobTitle": "Senior Designer", "department": "Design", "location": "NYC", "manager": "bross", "license": false},
+      {"displayName": "Jackson Pollock", "mailNickname": "jpollock", "jobTitle": "Designer", "department": "Design", "location": "NYC", "manager": "bross", "license": false},
+      {"displayName": "Salvador Dali", "mailNickname": "sdali", "jobTitle": "Senior Designer", "department": "Design", "location": "London", "manager": "awarhol", "license": false},
+      {"displayName": "Pablo Picasso", "mailNickname": "ppicasso", "jobTitle": "Designer", "department": "Design", "location": "London", "manager": "awarhol", "license": false},
+      {"displayName": "Vincent VanGogh", "mailNickname": "vvangogh", "jobTitle": "Designer", "department": "Design", "location": "Phoenix", "manager": "fkahlo", "license": false},
+      {"displayName": "Claude Monet", "mailNickname": "cmonet", "jobTitle": "Junior Designer", "department": "Design", "location": "Phoenix", "manager": "fkahlo", "license": false}
+    ]
+  },
+  "sales": {
+    "vp": {"displayName": "Jordan Belfort", "mailNickname": "jbelfort", "jobTitle": "VP Sales", "department": "Sales", "location": "NYC", "manager": "mpriestly", "license": true},
+    "managers": [
+      {"displayName": "Saul Goodman", "mailNickname": "sgoodman", "jobTitle": "Sales Manager", "department": "Sales", "location": "NYC", "manager": "jbelfort", "license": true},
+      {"displayName": "Don Corleone", "mailNickname": "dcorleone", "jobTitle": "Sales Manager", "department": "Sales", "location": "London", "manager": "jbelfort", "license": true},
+      {"displayName": "Gordon Gekko", "mailNickname": "ggekko", "jobTitle": "Sales Manager", "department": "Sales", "location": "Phoenix", "manager": "jbelfort", "license": true}
+    ],
+    "reps": [
+      {"displayName": "Ferris Bueller", "mailNickname": "fbueller", "jobTitle": "Senior Sales Rep", "department": "Sales", "location": "NYC", "manager": "sgoodman", "license": false},
+      {"displayName": "Elle Woods", "mailNickname": "ewoods", "jobTitle": "Sales Rep", "department": "Sales", "location": "NYC", "manager": "sgoodman", "license": false},
+      {"displayName": "Harvey Specter", "mailNickname": "hspecter", "jobTitle": "Sales Rep", "department": "Sales", "location": "NYC", "manager": "sgoodman", "license": false},
+      {"displayName": "Ari Gold", "mailNickname": "agold", "jobTitle": "Senior Sales Rep", "department": "Sales", "location": "London", "manager": "dcorleone", "license": false},
+      {"displayName": "Jerry Maguire", "mailNickname": "jmaguire", "jobTitle": "Sales Rep", "department": "Sales", "location": "London", "manager": "dcorleone", "license": false},
+      {"displayName": "Stringer Bell", "mailNickname": "sbell", "jobTitle": "Sales Rep", "department": "Sales", "location": "London", "manager": "dcorleone", "license": false},
+      {"displayName": "Tommy Shelby", "mailNickname": "tshelby", "jobTitle": "Senior Sales Rep", "department": "Sales", "location": "Phoenix", "manager": "ggekko", "license": false},
+      {"displayName": "Michael Scott", "mailNickname": "mscott", "jobTitle": "Sales Rep", "department": "Sales", "location": "Phoenix", "manager": "ggekko", "license": false},
+      {"displayName": "Dwight Schrute", "mailNickname": "dschrute", "jobTitle": "Sales Rep", "department": "Sales", "location": "Phoenix", "manager": "ggekko", "license": false},
+      {"displayName": "Jim Halpert", "mailNickname": "jhalpert", "jobTitle": "Junior Sales Rep", "department": "Sales", "location": "NYC", "manager": "sgoodman", "license": false},
+      {"displayName": "Pam Beesly", "mailNickname": "pbeesly", "jobTitle": "Sales Rep", "department": "Sales", "location": "London", "manager": "dcorleone", "license": false}
+    ]
+  },
+  "marketing": {
+    "managers": [
+      {"displayName": "Peggy Olson", "mailNickname": "polson", "jobTitle": "Marketing Manager", "department": "Marketing", "location": "NYC", "manager": "ddraper", "license": true},
+      {"displayName": "Joan Holloway", "mailNickname": "jholloway", "jobTitle": "Marketing Manager", "department": "Marketing", "location": "London", "manager": "ddraper", "license": true},
+      {"displayName": "Roger Sterling", "mailNickname": "rsterling", "jobTitle": "Marketing Manager", "department": "Marketing", "location": "Phoenix", "manager": "ddraper", "license": true}
+    ],
+    "staff": [
+      {"displayName": "Stan Rizzo", "mailNickname": "srizzo", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "NYC", "manager": "polson", "license": false},
+      {"displayName": "Michael Ginsberg", "mailNickname": "mginsberg", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "NYC", "manager": "polson", "license": false},
+      {"displayName": "Sal Romano", "mailNickname": "sromano", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "London", "manager": "jholloway", "license": false},
+      {"displayName": "Ken Cosgrove", "mailNickname": "kcosgrove", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "London", "manager": "jholloway", "license": false},
+      {"displayName": "Harry Crane", "mailNickname": "hcrane", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "Phoenix", "manager": "rsterling", "license": false},
+      {"displayName": "Paul Kinsey", "mailNickname": "pkinsey", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "Phoenix", "manager": "rsterling", "license": false},
+      {"displayName": "Megan Calvet", "mailNickname": "mcalvet", "jobTitle": "Marketing Specialist", "department": "Marketing", "location": "NYC", "manager": "polson", "license": false}
+    ]
+  },
+  "support": {
+    "vp": {"displayName": "Leslie Knope", "mailNickname": "lknope", "jobTitle": "VP Support", "department": "Support", "location": "NYC", "manager": "mpriestly", "license": true},
+    "managers": [
+      {"displayName": "Ron Swanson", "mailNickname": "rswanson", "jobTitle": "Support Manager", "department": "Support", "location": "NYC", "manager": "lknope", "license": true},
+      {"displayName": "Ben Wyatt", "mailNickname": "bwyatt", "jobTitle": "Support Manager", "department": "Support", "location": "London", "manager": "lknope", "license": true},
+      {"displayName": "Chris Traeger", "mailNickname": "ctraeger", "jobTitle": "Support Manager", "department": "Support", "location": "Phoenix", "manager": "lknope", "license": true}
+    ],
+    "staff": [
+      {"displayName": "April Ludgate", "mailNickname": "aludgate", "jobTitle": "Support Specialist", "department": "Support", "location": "NYC", "manager": "rswanson", "license": false},
+      {"displayName": "Andy Dwyer", "mailNickname": "adwyer", "jobTitle": "Support Specialist", "department": "Support", "location": "London", "manager": "bwyatt", "license": false},
+      {"displayName": "Tom Haverford", "mailNickname": "thaverford", "jobTitle": "Support Specialist", "department": "Support", "location": "London", "manager": "bwyatt", "license": false},
+      {"displayName": "Donna Meagle", "mailNickname": "dmeagle", "jobTitle": "Support Specialist", "department": "Support", "location": "London", "manager": "bwyatt", "license": false},
+      {"displayName": "Jerry Gergich", "mailNickname": "jgergich", "jobTitle": "Support Specialist", "department": "Support", "location": "Phoenix", "manager": "ctraeger", "license": false},
+      {"displayName": "Ann Perkins", "mailNickname": "aperkins", "jobTitle": "Support Specialist", "department": "Support", "location": "Phoenix", "manager": "ctraeger", "license": false}
+    ]
+  },
+  "hr": {
+    "vp": {"displayName": "Toby Flenderson", "mailNickname": "tflenderson", "jobTitle": "VP HR", "department": "HR", "location": "NYC", "manager": "mpriestly", "license": true},
+    "managers": [
+      {"displayName": "Holly Flax", "mailNickname": "hflax", "jobTitle": "HR Manager", "department": "HR", "location": "NYC", "manager": "tflenderson", "license": true},
+      {"displayName": "Jan Levinson", "mailNickname": "jlevinson", "jobTitle": "HR Manager", "department": "HR", "location": "London", "manager": "tflenderson", "license": true}
+    ],
+    "staff": [
+      {"displayName": "Ryan Howard", "mailNickname": "rhoward", "jobTitle": "HR Specialist", "department": "HR", "location": "London", "manager": "jlevinson", "license": false},
+      {"displayName": "Kelly Kapoor", "mailNickname": "kkapoor", "jobTitle": "HR Specialist", "department": "HR", "location": "Phoenix", "manager": "jlevinson", "license": false}
+    ]
+  },
+  "finance": {
+    "managers": [
+      {"displayName": "Angela Martin", "mailNickname": "amartin", "jobTitle": "Finance Manager", "department": "Finance", "location": "NYC", "manager": "smcduck", "license": true},
+      {"displayName": "Oscar Martinez", "mailNickname": "omartinez", "jobTitle": "Finance Manager", "department": "Finance", "location": "London", "manager": "smcduck", "license": true}
+    ],
+    "staff": [
+      {"displayName": "Kevin Malone", "mailNickname": "kmalone", "jobTitle": "Accountant", "department": "Finance", "location": "NYC", "manager": "amartin", "license": false},
+      {"displayName": "Stanley Hudson", "mailNickname": "shudson", "jobTitle": "Accountant", "department": "Finance", "location": "NYC", "manager": "amartin", "license": false},
+      {"displayName": "Phyllis Vance", "mailNickname": "pvance", "jobTitle": "Accountant", "department": "Finance", "location": "Phoenix", "manager": "omartinez", "license": false}
+    ]
+  }
+}

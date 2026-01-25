@@ -1,0 +1,56 @@
+[
+  {
+    "Action": "Already disabled",
+    "Control": "SecurityDefaults",
+    "Impact": "No change needed",
+    "Timestamp": "2026-01-23 12:34:46"
+  },
+  {
+    "Action": "No CA policy blocking legacy auth",
+    "Control": "BlockLegacyAuthentication",
+    "Impact": "Legacy protocols (IMAP, POP3, SMTP) can bypass MFA",
+    "Timestamp": "2026-01-23 12:34:46"
+  },
+  {
+    "Action": "No CA policy requiring admin MFA",
+    "Control": "AdminMFAV2",
+    "Impact": "Admins can sign in without MFA",
+    "Timestamp": "2026-01-23 12:34:46"
+  },
+  {
+    "Action": "No sign-in risk policy",
+    "Control": "SigninRiskPolicy",
+    "Impact": "Risky sign-ins not challenged",
+    "Timestamp": "2026-01-23 12:34:46"
+  },
+  {
+    "Action": "No user risk policy",
+    "Control": "UserRiskPolicy",
+    "Impact": "Compromised users not detected",
+    "Timestamp": "2026-01-23 12:34:46"
+  },
+  {
+    "Action": "Enabled user app consent",
+    "Control": "IntegratedApps",
+    "Impact": "Users can consent to apps without admin approval",
+    "Timestamp": "2026-01-23 12:34:47"
+  },
+  {
+    "Action": "Password expiration policy checked",
+    "Control": "PWAgePolicyNew",
+    "Impact": "Should be set to never expire (Microsoft recommendation)",
+    "Timestamp": "2026-01-23 12:34:51"
+  },
+  {
+    "Action": "SSPR may not be enabled for all users",
+    "Control": "SelfServicePasswordReset",
+    "Impact": "Users can't self-reset passwords, increases helpdesk load",
+    "Timestamp": "2026-01-23 12:34:51"
+  },
+  {
+    "Action": "Created admin without MFA: unprotected-admin",
+    "Control": "AdminMFAV2",
+    "Impact": "Admin account vulnerable to credential attacks",
+    "Timestamp": "2026-01-23 12:34:53"
+  }
+]

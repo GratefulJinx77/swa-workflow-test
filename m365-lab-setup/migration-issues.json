@@ -1,0 +1,170 @@
+[
+  {
+    "Details": "jsmith-mismatch@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:16",
+    "Description": "User with potential UPN mismatch: John Smith (UPN Mismatch)",
+    "Severity": "High",
+    "Category": "UPN/Email",
+    "MigrationImpact": "Mail routing issues post-migration"
+  },
+  {
+    "Details": "jdoe-mismatch@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:17",
+    "Description": "User with potential UPN mismatch: Jane Doe (UPN Mismatch)",
+    "Severity": "High",
+    "Category": "UPN/Email",
+    "MigrationImpact": "Mail routing issues post-migration"
+  },
+  {
+    "Details": "user.withdots@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:18",
+    "Description": "User with multiple dots in UPN",
+    "Severity": "Medium",
+    "Category": "UPN/Email",
+    "MigrationImpact": "Some systems don't handle dots well"
+  },
+  {
+    "Details": "unlicensed-manager@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:18",
+    "Description": "Manager-level user without license: Unlicensed Manager",
+    "Severity": "High",
+    "Category": "Licensing",
+    "MigrationImpact": "User won't have mailbox/services post-migration"
+  },
+  {
+    "Details": "Nested-Level-1 -> 2 -> 3 -> 4",
+    "Timestamp": "2026-01-23 11:14:23",
+    "Description": "Deeply nested group chain (4 levels)",
+    "Severity": "High",
+    "Category": "Groups",
+    "MigrationImpact": "May cause sync issues, permission inheritance problems"
+  },
+  {
+    "Details": "mail-enabled-sec",
+    "Timestamp": "2026-01-23 11:14:25",
+    "Description": "Mail-enabled security group (hybrid artifact)",
+    "Severity": "Medium",
+    "Category": "Groups",
+    "MigrationImpact": "May have issues with cloud-only features"
+  },
+  {
+    "Details": "This-Is-A-Very-Long-Group-Name-That-Might-Cause-Issues-During-Migration-Process-And-Should-Be-Flagged",
+    "Timestamp": "2026-01-23 11:14:25",
+    "Description": "Group with very long name (100+ chars)",
+    "Severity": "Low",
+    "Category": "Groups",
+    "MigrationImpact": "May truncate or cause display issues"
+  },
+  {
+    "Details": "Secret expires: 2026-02-06",
+    "Timestamp": "2026-01-23 11:14:27",
+    "Description": "App with secret expiring in 14 days: Migration-Critical-App",
+    "Severity": "Critical",
+    "Category": "Applications",
+    "MigrationImpact": "Will break during migration if not renewed"
+  },
+  {
+    "Details": "Legacy-App-8k8232-Tenant",
+    "Timestamp": "2026-01-23 11:14:27",
+    "Description": "App with potential hardcoded tenant reference",
+    "Severity": "High",
+    "Category": "Applications",
+    "MigrationImpact": "May fail post-migration if tenant ID is hardcoded"
+  },
+  {
+    "Details": "Multi-Tenant-Integration",
+    "Timestamp": "2026-01-23 11:14:29",
+    "Description": "Multi-tenant application found",
+    "Severity": "Medium",
+    "Category": "Applications",
+    "MigrationImpact": "External tenant relationships need verification"
+  },
+  {
+    "Details": "shared-reception@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:29",
+    "Description": "Shared mailbox with direct login enabled",
+    "Severity": "Medium",
+    "Category": "Mailbox",
+    "MigrationImpact": "Should be converted to proper shared mailbox, disable sign-in"
+  },
+  {
+    "Details": "conf-room-a@8k8232.onmicrosoft.com (Room)",
+    "Timestamp": "2026-01-23 11:14:30",
+    "Description": "Resource mailbox needs migration planning: Conference Room A",
+    "Severity": "Low",
+    "Category": "Mailbox",
+    "MigrationImpact": "Resource mailboxes need special handling"
+  },
+  {
+    "Details": "car-pool@8k8232.onmicrosoft.com (Equipment)",
+    "Timestamp": "2026-01-23 11:14:31",
+    "Description": "Resource mailbox needs migration planning: Company Car Pool",
+    "Severity": "Low",
+    "Category": "Mailbox",
+    "MigrationImpact": "Resource mailboxes need special handling"
+  },
+  {
+    "Details": "projector@8k8232.onmicrosoft.com (Equipment)",
+    "Timestamp": "2026-01-23 11:14:32",
+    "Description": "Resource mailbox needs migration planning: Projector Booking",
+    "Severity": "Low",
+    "Category": "Mailbox",
+    "MigrationImpact": "Resource mailboxes need special handling"
+  },
+  {
+    "Details": "Legal-Hold-Users-2023 (3 users)",
+    "Timestamp": "2026-01-23 11:14:33",
+    "Description": "Users under legal/litigation hold",
+    "Severity": "Critical",
+    "Category": "Compliance",
+    "MigrationImpact": "Cannot delete data, special migration procedures required"
+  },
+  {
+    "Details": "Financial-Records-7Year-Retention (SOX)",
+    "Timestamp": "2026-01-23 11:14:34",
+    "Description": "Users under regulatory retention requirements",
+    "Severity": "High",
+    "Category": "Compliance",
+    "MigrationImpact": "Retention policies must be recreated in target tenant"
+  },
+  {
+    "Details": "GDPR-Data-Processors",
+    "Timestamp": "2026-01-23 11:14:34",
+    "Description": "GDPR data processor tracking group",
+    "Severity": "High",
+    "Category": "Compliance",
+    "MigrationImpact": "Data processing records and DPA must be updated post-migration"
+  },
+  {
+    "Details": "ad.sync.user@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:35",
+    "Description": "Cloud user with AD-like naming convention",
+    "Severity": "High",
+    "Category": "Directory Sync",
+    "MigrationImpact": "May conflict with AD sync if hybrid is planned"
+  },
+  {
+    "Details": "rjohnson1, bjohnson, rbjohnson (similar names)",
+    "Timestamp": "2026-01-23 11:14:36",
+    "Description": "Potential duplicate users detected",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "MigrationImpact": "Need to verify if these are same person or different"
+  },
+  {
+    "Details": "Run: Get-MgUserAuthenticationMethod for all users",
+    "Timestamp": "2026-01-23 11:14:36",
+    "Description": "MFA registration status unknown for migrating users",
+    "Severity": "Critical",
+    "Category": "Security",
+    "MigrationImpact": "Users may need to re-register MFA in target tenant"
+  },
+  {
+    "Details": "break-glass-admin@8k8232.onmicrosoft.com",
+    "Timestamp": "2026-01-23 11:14:37",
+    "Description": "Break-glass account needs migration planning",
+    "Severity": "High",
+    "Category": "Security",
+    "MigrationImpact": "Emergency access procedures must be updated for target tenant"
+  }
+]

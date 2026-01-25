@@ -1,0 +1,1024 @@
+{
+  "metadata": {
+    "title": "Azure Security Assessment - Jinks Labs",
+    "tenant": "jinkslabs.com",
+    "tenant_id": "5a62aa80-bceb-44d3-9879-b4a48deb66de",
+    "subscription": "Primary PAYG",
+    "subscription_id": "86010fa7-268b-4d8e-95a6-6e0fab75c06c",
+    "assessment_date": "2026-01-22",
+    "assessed_by": "Security Assessment Framework",
+    "user_context": "Brad@jinkslabs.com (Owner + Security Admin)",
+    "version": "1.0",
+    "next_review_recommended": "2026-04-22"
+  },
+  "executive_summary": {
+    "overview": "This assessment evaluates the security posture of the Jinks Labs Azure tenant across seven critical domains. The environment consists of 5 Static Web Apps, 1 Storage Account, 1 Lab Plan, 1 Key Vault, and 1 Log Analytics workspace.",
+    "overall_risk_rating": "MODERATE-HIGH",
+    "key_strengths": [
+      "Key Vault properly configured with soft delete and purge protection",
+      "Security contact configured for high-severity alerts",
+      "MFA enabled for administrative account",
+      "Storage Account configured with HTTPS-only and TLS 1.2",
+      "Log Analytics workspace deployed for centralized logging",
+      "Basic Security Center policies active in audit mode"
+    ],
+    "critical_gaps": [
+      "No Conditional Access policies enforcing MFA or blocking legacy authentication",
+      "Privileged roles permanently assigned (no PIM)",
+      "No break-glass account configuration",
+      "Defender for Cloud enhanced security features not enabled",
+      "No SIEM (Sentinel) deployment for security event correlation",
+      "Comprehensive diagnostic logging not confirmed across all resources",
+      "No Azure Policy governance framework in enforcement mode"
+    ]
+  },
+  "key_metrics": {
+    "risk_rating": "MODERATE-HIGH",
+    "findings_by_severity": {
+      "critical": 3,
+      "high": 8,
+      "medium": 12,
+      "informational": 5
+    },
+    "secure_score": {
+      "current": "TBD",
+      "target": "80%+"
+    },
+    "environment_inventory": {
+      "static_web_apps": 5,
+      "storage_accounts": 1,
+      "lab_plans": 1,
+      "key_vaults": 1,
+      "log_analytics_workspaces": 1
+    }
+  },
+  "cost_impact": {
+    "current_monthly_baseline": {
+      "description": "Key Vault, Storage Account, Static Web Apps, Log Analytics, Security Center Default",
+      "estimated_range": "$50-100"
+    },
+    "phase_costs": [
+      {
+        "phase": "Phase 1 - Immediate Actions",
+        "monthly_increase": "$18",
+        "cumulative_monthly": "$68-118",
+        "components": [
+          {
+            "service": "Defender for Storage",
+            "cost": "$10"
+          },
+          {
+            "service": "Defender for Key Vault",
+            "cost": "$0.50"
+          },
+          {
+            "service": "Defender for Resource Manager",
+            "cost": "$5"
+          },
+          {
+            "service": "Defender for DNS",
+            "cost": "$2.50"
+          }
+        ]
+      },
+      {
+        "phase": "Phase 2 - High Priority",
+        "monthly_increase": "$21-34",
+        "cumulative_monthly": "$89-152",
+        "components": [
+          {
+            "service": "Entra ID P2 (1 user)",
+            "cost": "$9"
+          },
+          {
+            "service": "Microsoft Sentinel (5-10GB ingestion)",
+            "cost": "$12-25"
+          }
+        ]
+      },
+      {
+        "phase": "Phase 3 - Medium Priority",
+        "monthly_increase": "$0",
+        "cumulative_monthly": "$89-152",
+        "components": [
+          {
+            "service": "Azure Policy and compliance tools",
+            "cost": "Included"
+          }
+        ]
+      },
+      {
+        "phase": "Phase 4 - Optimization (without Front Door)",
+        "monthly_increase": "$20",
+        "cumulative_monthly": "$109-172",
+        "components": [
+          {
+            "service": "Private Link endpoints (2)",
+            "cost": "$15"
+          },
+          {
+            "service": "Extended log retention (90 days)",
+            "cost": "$5-10"
+          }
+        ]
+      },
+      {
+        "phase": "Phase 4 - Optimization (with Front Door)",
+        "monthly_increase": "$350",
+        "cumulative_monthly": "$439-502",
+        "components": [
+          {
+            "service": "Azure Front Door Premium + WAF",
+            "cost": "$330"
+          },
+          {
+            "service": "Private Link endpoints (2)",
+            "cost": "$15"
+          },
+          {
+            "service": "Extended log retention",
+            "cost": "$5-10"
+          }
+        ]
+      }
+    ],
+    "recommended_path": "Implement Phases 1-3 immediately (~$89-152/month, ~80% increase). Defer Front Door/WAF decision until Static Web Apps reach production scale."
+  },
+  "critical_findings": [
+    {
+      "id": "C-IAM-01",
+      "title": "No Conditional Access Policies Detected",
+      "category": "Identity and Access Management",
+      "risk_level": "CRITICAL",
+      "cvss_score": 8.1,
+      "description": "There is no evidence of Conditional Access (CA) policies configured. While MFA is enabled for your account, without CA policies, MFA enforcement is inconsistent and lacks risk-based controls.",
+      "impact": [
+        "No location-based access restrictions",
+        "No device compliance requirements",
+        "No application-specific controls",
+        "No session management policies",
+        "Lack of defense-in-depth for privileged accounts"
+      ],
+      "remediation_summary": "Implement baseline Conditional Access policies including MFA for all users, MFA for Azure management, block legacy authentication, require compliant devices for privileged roles, and block access from untrusted locations for admin accounts.",
+      "time_estimate": "4 hours",
+      "cost_impact": "Included in existing licenses"
+    },
+    {
+      "id": "C-IAM-02",
+      "title": "No Break-Glass Account Configuration Validated",
+      "category": "Identity and Access Management",
+      "risk_level": "CRITICAL",
+      "cvss_score": 7.5,
+      "description": "Emergency access (break-glass) accounts are essential to prevent complete lockout from Entra ID during CA policy misconfigurations or MFA service disruptions.",
+      "impact": [
+        "Risk of complete tenant lockout during CA policy errors",
+        "No recovery mechanism if MFA services fail",
+        "Extended downtime during authentication service disruptions"
+      ],
+      "remediation_summary": "Create 2 emergency access accounts with long randomly generated passwords, assign Global Administrator role, exclude from all Conditional Access policies, and configure alerts for any use.",
+      "time_estimate": "1 hour",
+      "cost_impact": "No cost"
+    },
+    {
+      "id": "C-IAM-03",
+      "title": "Privileged Identity Management (PIM) Not Configured",
+      "category": "Identity and Access Management",
+      "risk_level": "CRITICAL",
+      "cvss_score": 8.2,
+      "description": "Highly privileged roles (Owner, Security Admin) appear to be permanently assigned rather than just-in-time (JIT) activated through PIM.",
+      "impact": [
+        "Permanent privileged access increases attack surface",
+        "No time-bounded access to sensitive operations",
+        "Lack of approval workflows for sensitive role activations",
+        "Insufficient audit trail for privileged operations",
+        "Violates least privilege principle"
+      ],
+      "remediation_summary": "Enable Entra ID P2 licensing, configure PIM for Azure Resources and Entra ID roles, convert Owner and Security Admin roles to eligible assignments, set maximum activation duration to 8 hours, require MFA and justification for activation.",
+      "time_estimate": "4-6 hours",
+      "cost_impact": "$9/user/month (Entra ID P2)"
+    },
+    {
+      "id": "C-MON-01",
+      "title": "Microsoft Defender for Cloud Not Fully Enabled",
+      "category": "Threat Detection and Monitoring",
+      "risk_level": "CRITICAL",
+      "cvss_score": 8.5,
+      "description": "Microsoft Defender for Cloud enhanced security features (Defender plans) are not confirmed as enabled for Storage, Key Vault, Resource Manager, and DNS.",
+      "impact": [
+        "No vulnerability assessment for VMs",
+        "No file integrity monitoring",
+        "Limited threat detection for PaaS services",
+        "No Defender for Storage (malware scanning, sensitive data threat detection)",
+        "No Defender for Key Vault (suspicious access detection)"
+      ],
+      "remediation_summary": "Enable Defender for Storage, Key Vault, Resource Manager, and DNS at Standard tier.",
+      "time_estimate": "30 minutes",
+      "cost_impact": "$18/month"
+    },
+    {
+      "id": "C-MON-02",
+      "title": "Microsoft Sentinel (SIEM) Not Deployed",
+      "category": "Threat Detection and Monitoring",
+      "risk_level": "CRITICAL",
+      "cvss_score": 8.3,
+      "description": "While a Log Analytics workspace exists, Microsoft Sentinel SIEM is not confirmed as enabled for security event correlation and threat hunting.",
+      "impact": [
+        "No centralized security event correlation",
+        "No automated incident creation from multiple alert sources",
+        "No threat hunting capabilities",
+        "No SOAR playbooks for automated response",
+        "Manual investigation of security events required",
+        "Limited detection of multi-stage attacks"
+      ],
+      "remediation_summary": "Deploy Microsoft Sentinel on existing Log Analytics workspace, configure data connectors (Activity Log, Entra ID, Defender for Cloud), enable priority analytics rules, and develop SOAR playbooks.",
+      "time_estimate": "6-8 hours",
+      "cost_impact": "$12-25/month (estimated 5-10GB ingestion)"
+    },
+    {
+      "id": "C-MON-03",
+      "title": "No Security Information and Event Management (SIEM) Integration",
+      "category": "Threat Detection and Monitoring",
+      "risk_level": "CRITICAL",
+      "cvss_score": 8.3,
+      "description": "No centralized SIEM solution for correlating events across Entra ID, Azure, and applications.",
+      "impact": [
+        "Inability to detect coordinated attacks across identity and infrastructure",
+        "No automated playbooks for incident response",
+        "Manual log review required",
+        "Delayed threat detection and response"
+      ],
+      "remediation_summary": "See C-MON-02 for Sentinel deployment. Alternative: Configure Azure Monitor to forward logs to third-party SIEM.",
+      "time_estimate": "6-8 hours",
+      "cost_impact": "$12-25/month (Sentinel)"
+    }
+  ],
+  "remediation_phases": [
+    {
+      "phase_number": 1,
+      "phase_name": "Immediate Actions",
+      "timeline": "Week 1-2",
+      "goal": "Reduce critical risk exposure",
+      "effort_hours": "8-10",
+      "cost_monthly": "$18",
+      "priorities": [
+        {
+          "priority_id": "1.1",
+          "name": "Identity Protection Foundation",
+          "tasks": [
+            {
+              "task": "Create break-glass accounts",
+              "time": "1 hour",
+              "critical": true
+            },
+            {
+              "task": "Enable baseline Conditional Access policies",
+              "time": "4 hours",
+              "critical": true,
+              "note": "Start in report-only mode, transition to enforced after 48 hours validation"
+            }
+          ]
+        },
+        {
+          "priority_id": "1.2",
+          "name": "Threat Detection Baseline",
+          "tasks": [
+            {
+              "task": "Enable Defender for Cloud enhanced plans",
+              "time": "30 minutes",
+              "components": ["Storage", "Key Vault", "Resource Manager", "DNS"]
+            },
+            {
+              "task": "Configure critical alert rules",
+              "time": "2 hours",
+              "alerts": ["Key Vault access", "Mass deletion", "Failed MFA"]
+            }
+          ]
+        },
+        {
+          "priority_id": "1.3",
+          "name": "Data Protection",
+          "tasks": [
+            {
+              "task": "Enable blob soft delete and versioning",
+              "time": "30 minutes"
+            },
+            {
+              "task": "Implement resource locks",
+              "time": "30 minutes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "High Priority",
+      "timeline": "Week 3-4",
+      "goal": "Implement defense-in-depth and comprehensive monitoring",
+      "effort_hours": "25-30",
+      "cost_monthly": "$21-34",
+      "priorities": [
+        {
+          "priority_id": "2.1",
+          "name": "Privileged Access Management",
+          "tasks": [
+            {
+              "task": "Enable Entra ID P2 licensing",
+              "time": "1 hour",
+              "prerequisite": "Required for PIM"
+            },
+            {
+              "task": "Configure PIM for Owner and Security Admin roles",
+              "time": "4 hours"
+            },
+            {
+              "task": "Implement quarterly access reviews",
+              "time": "2 hours"
+            }
+          ]
+        },
+        {
+          "priority_id": "2.2",
+          "name": "Network Security Hardening",
+          "tasks": [
+            {
+              "task": "Configure Storage Account firewall",
+              "time": "2 hours"
+            },
+            {
+              "task": "Configure Key Vault network restrictions",
+              "time": "1 hour"
+            },
+            {
+              "task": "Review Static Web Apps access restrictions",
+              "time": "2 hours per app"
+            }
+          ]
+        },
+        {
+          "priority_id": "2.3",
+          "name": "Comprehensive Logging and SIEM",
+          "tasks": [
+            {
+              "task": "Deploy Microsoft Sentinel",
+              "time": "4 hours"
+            },
+            {
+              "task": "Configure data connectors",
+              "time": "2 hours",
+              "connectors": ["Activity Log", "Entra ID", "Defender for Cloud"]
+            },
+            {
+              "task": "Enable priority analytics rules",
+              "time": "4 hours"
+            },
+            {
+              "task": "Enable diagnostic settings for all resources",
+              "time": "2 hours"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Medium Priority",
+      "timeline": "Month 2",
+      "goal": "Establish governance and compliance framework",
+      "effort_hours": "27",
+      "cost_monthly": "$0",
+      "priorities": [
+        {
+          "priority_id": "3.1",
+          "name": "Policy Governance",
+          "tasks": [
+            {
+              "task": "Implement Azure Policy framework",
+              "time": "8 hours"
+            },
+            {
+              "task": "Configure deny policies for high-risk operations",
+              "time": "4 hours"
+            },
+            {
+              "task": "Establish policy compliance monitoring",
+              "time": "2 hours"
+            }
+          ]
+        },
+        {
+          "priority_id": "3.2",
+          "name": "Compliance Posture",
+          "tasks": [
+            {
+              "task": "Enable regulatory compliance assessments",
+              "time": "2 hours"
+            },
+            {
+              "task": "Implement resource tagging strategy",
+              "time": "4 hours"
+            },
+            {
+              "task": "Configure cost anomaly detection",
+              "time": "1 hour"
+            }
+          ]
+        },
+        {
+          "priority_id": "3.3",
+          "name": "Identity Hardening",
+          "tasks": [
+            {
+              "task": "Block legacy authentication protocols",
+              "time": "2 hours"
+            },
+            {
+              "task": "Configure password protection policies",
+              "time": "1 hour"
+            },
+            {
+              "task": "Implement sign-in and user risk policies",
+              "time": "3 hours"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Optimization",
+      "timeline": "Month 3+",
+      "goal": "Advanced security and operational excellence",
+      "effort_hours": "50",
+      "cost_monthly": "$20-355 (varies by Front Door decision)",
+      "priorities": [
+        {
+          "priority_id": "4.1",
+          "name": "Advanced Threat Detection",
+          "tasks": [
+            {
+              "task": "Enable UEBA in Sentinel",
+              "time": "2 hours"
+            },
+            {
+              "task": "Configure custom threat hunting queries",
+              "time": "8 hours"
+            },
+            {
+              "task": "Develop SOAR playbooks for automated response",
+              "time": "16 hours"
+            }
+          ]
+        },
+        {
+          "priority_id": "4.2",
+          "name": "Network Defense in Depth",
+          "tasks": [
+            {
+              "task": "Evaluate Azure Front Door + WAF for Static Web Apps",
+              "time": "8 hours",
+              "cost": "$330/month",
+              "optional": true
+            },
+            {
+              "task": "Implement Private Link for Key Vault and Storage",
+              "time": "8 hours",
+              "cost": "$15/month"
+            }
+          ]
+        },
+        {
+          "priority_id": "4.3",
+          "name": "Advanced Data Protection",
+          "tasks": [
+            {
+              "task": "Evaluate customer-managed encryption keys",
+              "time": "4 hours",
+              "optional": true
+            },
+            {
+              "task": "Implement data lifecycle management policies",
+              "time": "2 hours"
+            },
+            {
+              "task": "Configure immutable storage for compliance",
+              "time": "2 hours",
+              "optional": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "checklist_by_phase": {
+    "phase_1_immediate": [
+      {
+        "task": "Generate and securely store break-glass account passwords",
+        "category": "Identity Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Create breakglass01@jinkslabs.com account",
+        "category": "Identity Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Create breakglass02@jinkslabs.com account",
+        "category": "Identity Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Assign Global Administrator role to both accounts",
+        "category": "Identity Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Test authentication with break-glass accounts",
+        "category": "Identity Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Store credentials in physical safe / offline password manager",
+        "category": "Identity Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Create CA-001: Require MFA for All Users (report-only)",
+        "category": "Conditional Access",
+        "status": "pending"
+      },
+      {
+        "task": "Create CA-002: Require MFA for Azure Management (report-only)",
+        "category": "Conditional Access",
+        "status": "pending"
+      },
+      {
+        "task": "Create CA-003: Block Legacy Authentication (report-only)",
+        "category": "Conditional Access",
+        "status": "pending"
+      },
+      {
+        "task": "Exclude break-glass accounts from all CA policies",
+        "category": "Conditional Access",
+        "status": "pending"
+      },
+      {
+        "task": "Monitor CA policies in report-only mode for 48 hours",
+        "category": "Conditional Access",
+        "status": "pending"
+      },
+      {
+        "task": "Switch CA policies from report-only to enabled",
+        "category": "Conditional Access",
+        "status": "pending"
+      },
+      {
+        "task": "Enable Defender for Storage (Standard tier)",
+        "category": "Threat Detection",
+        "status": "pending"
+      },
+      {
+        "task": "Enable Defender for Key Vault (Standard tier)",
+        "category": "Threat Detection",
+        "status": "pending"
+      },
+      {
+        "task": "Enable Defender for Resource Manager (Standard tier)",
+        "category": "Threat Detection",
+        "status": "pending"
+      },
+      {
+        "task": "Enable Defender for DNS (Standard tier)",
+        "category": "Threat Detection",
+        "status": "pending"
+      },
+      {
+        "task": "Create Action Group: SecurityAlerts",
+        "category": "Monitoring",
+        "status": "pending"
+      },
+      {
+        "task": "Configure alert: Break-Glass Account Usage",
+        "category": "Monitoring",
+        "status": "pending"
+      },
+      {
+        "task": "Configure alert: Resource Deletion",
+        "category": "Monitoring",
+        "status": "pending"
+      },
+      {
+        "task": "Configure alert: Privileged Role Assignment",
+        "category": "Monitoring",
+        "status": "pending"
+      },
+      {
+        "task": "Enable blob soft delete (14-day retention)",
+        "category": "Data Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Enable blob versioning",
+        "category": "Data Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Enable container soft delete (14-day retention)",
+        "category": "Data Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Apply CanNotDelete lock to Key Vault",
+        "category": "Resource Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Apply CanNotDelete lock to Storage Account",
+        "category": "Resource Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Apply CanNotDelete lock to Log Analytics workspace",
+        "category": "Resource Protection",
+        "status": "pending"
+      }
+    ],
+    "phase_2_high_priority": [
+      {
+        "task": "Purchase Entra ID P2 license",
+        "category": "Privileged Access",
+        "status": "pending"
+      },
+      {
+        "task": "Enable PIM for Azure Resources",
+        "category": "Privileged Access",
+        "status": "pending"
+      },
+      {
+        "task": "Configure PIM settings for Owner role",
+        "category": "Privileged Access",
+        "status": "pending"
+      },
+      {
+        "task": "Convert Owner assignment to eligible (not permanent)",
+        "category": "Privileged Access",
+        "status": "pending"
+      },
+      {
+        "task": "Configure Storage Account firewall (default: Deny)",
+        "category": "Network Security",
+        "status": "pending"
+      },
+      {
+        "task": "Configure Key Vault firewall (default: Deny)",
+        "category": "Network Security",
+        "status": "pending"
+      },
+      {
+        "task": "Enable Microsoft Sentinel on jinkslabs-logs workspace",
+        "category": "SIEM",
+        "status": "pending"
+      },
+      {
+        "task": "Configure data connector: Azure Activity",
+        "category": "SIEM",
+        "status": "pending"
+      },
+      {
+        "task": "Configure data connector: Entra ID Sign-ins",
+        "category": "SIEM",
+        "status": "pending"
+      },
+      {
+        "task": "Enable diagnostic settings: Storage Account",
+        "category": "Logging",
+        "status": "pending"
+      },
+      {
+        "task": "Enable diagnostic settings: Subscription Activity Log",
+        "category": "Logging",
+        "status": "pending"
+      }
+    ],
+    "phase_3_medium_priority": [
+      {
+        "task": "Assign Azure Security Benchmark initiative (enforce mode)",
+        "category": "Policy Governance",
+        "status": "pending"
+      },
+      {
+        "task": "Create policy: Require tags on all resources",
+        "category": "Policy Governance",
+        "status": "pending"
+      },
+      {
+        "task": "Enable Azure Security Benchmark compliance assessment",
+        "category": "Compliance",
+        "status": "pending"
+      },
+      {
+        "task": "Create cost budget with alerts",
+        "category": "Cost Management",
+        "status": "pending"
+      },
+      {
+        "task": "Tag all Static Web Apps",
+        "category": "Resource Organization",
+        "status": "pending"
+      },
+      {
+        "task": "Configure custom banned password list",
+        "category": "Identity Hardening",
+        "status": "pending"
+      },
+      {
+        "task": "Audit service principals",
+        "category": "Identity Hardening",
+        "status": "pending"
+      }
+    ],
+    "phase_4_optimization": [
+      {
+        "task": "Enable UEBA in Sentinel",
+        "category": "Advanced Threat Detection",
+        "status": "pending"
+      },
+      {
+        "task": "Evaluate Azure Front Door + WAF requirement",
+        "category": "Network Defense",
+        "status": "pending"
+      },
+      {
+        "task": "Create private endpoint: Key Vault",
+        "category": "Network Defense",
+        "status": "pending"
+      },
+      {
+        "task": "Create data lifecycle management policy",
+        "category": "Data Protection",
+        "status": "pending"
+      },
+      {
+        "task": "Test complete environment recovery",
+        "category": "Disaster Recovery",
+        "status": "pending"
+      }
+    ]
+  },
+  "command_reference": {
+    "assessment_validation": [
+      {
+        "task": "Run validation script",
+        "command": "./azure-security-validation.sh <resource-group-name>",
+        "description": "Collects all configuration data"
+      },
+      {
+        "task": "Check Secure Score",
+        "command": "az security secure-score-controls list --output table",
+        "description": "View current security posture score"
+      },
+      {
+        "task": "List high-severity recommendations",
+        "command": "az security assessment list --query \"[?status.code=='Unhealthy' && metadata.severity=='High']\" -o table",
+        "description": "Show critical security findings"
+      }
+    ],
+    "identity_access": [
+      {
+        "task": "List Conditional Access policies",
+        "command": "az rest --method GET --uri \"https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies\" --query \"value[].{Name:displayName, State:state}\" -o table",
+        "description": "View all CA policies and their status"
+      },
+      {
+        "task": "Create break-glass account",
+        "command": "PASSWORD=$(openssl rand -base64 32)\naz ad user create --display-name \"Emergency Access Account 01\" --user-principal-name breakglass01@jinkslabs.com --password \"$PASSWORD\" --force-change-password-next-sign-in false",
+        "description": "Generate strong password and create emergency access account"
+      },
+      {
+        "task": "List privileged role assignments",
+        "command": "az role assignment list --scope \"/subscriptions/86010fa7-268b-4d8e-95a6-6e0fab75c06c\" --query \"[?roleDefinitionName=='Owner' || roleDefinitionName=='Contributor']\" -o table",
+        "description": "Show users with high-privilege roles"
+      }
+    ],
+    "defender_cloud": [
+      {
+        "task": "Check Defender plans status",
+        "command": "az security pricing list --output table",
+        "description": "View all Defender plans and their pricing tier"
+      },
+      {
+        "task": "Enable Defender for Storage",
+        "command": "az security pricing create --name StorageAccounts --tier Standard",
+        "description": "Activate threat detection for storage"
+      },
+      {
+        "task": "Enable Defender for Key Vault",
+        "command": "az security pricing create --name KeyVaults --tier Standard",
+        "description": "Activate threat detection for Key Vault"
+      },
+      {
+        "task": "List security alerts",
+        "command": "az security alert list --query \"[].{Name:alertDisplayName, Severity:severity, Status:status}\" -o table",
+        "description": "View recent security alerts"
+      }
+    ],
+    "network_security": [
+      {
+        "task": "Configure Storage Account firewall",
+        "command": "az storage account update --name oldshrimproad001 --default-action Deny\naz storage account network-rule add --account-name oldshrimproad001 --ip-address \"YOUR_IP/32\"",
+        "description": "Restrict storage access to specific IPs"
+      },
+      {
+        "task": "Configure Key Vault firewall",
+        "command": "az keyvault update --name jinkslabs-vault --default-action Deny\naz keyvault network-rule add --name jinkslabs-vault --ip-address \"YOUR_IP/32\"",
+        "description": "Restrict Key Vault access to specific IPs"
+      },
+      {
+        "task": "Get current public IP",
+        "command": "curl -s ifconfig.me",
+        "description": "Retrieve your current public IP address"
+      }
+    ],
+    "data_protection": [
+      {
+        "task": "Enable blob soft delete",
+        "command": "az storage blob service-properties delete-policy update --account-name oldshrimproad001 --enable true --days-retained 14",
+        "description": "Enable 14-day recovery for deleted blobs"
+      },
+      {
+        "task": "Enable blob versioning",
+        "command": "az storage account blob-service-properties update --account-name oldshrimproad001 --enable-versioning true",
+        "description": "Track all blob versions for recovery"
+      },
+      {
+        "task": "Check soft delete status",
+        "command": "az storage blob service-properties delete-policy show --account-name oldshrimproad001",
+        "description": "Verify soft delete configuration"
+      }
+    ],
+    "resource_locks": [
+      {
+        "task": "Apply lock to Key Vault",
+        "command": "az lock create --name \"PreventKVDeletion\" --lock-type CanNotDelete --resource-group <rg> --resource-name jinkslabs-vault --resource-type Microsoft.KeyVault/vaults",
+        "description": "Prevent accidental Key Vault deletion"
+      },
+      {
+        "task": "Apply lock to Storage Account",
+        "command": "az lock create --name \"PreventStorageDeletion\" --lock-type CanNotDelete --resource-group <rg> --resource-name oldshrimproad001 --resource-type Microsoft.Storage/storageAccounts",
+        "description": "Prevent accidental storage deletion"
+      },
+      {
+        "task": "List all locks",
+        "command": "az lock list --output table",
+        "description": "View all resource locks in subscription"
+      }
+    ],
+    "monitoring_alerts": [
+      {
+        "task": "Create Action Group",
+        "command": "az monitor action-group create --name SecurityAlerts --resource-group <rg> --short-name SecAlert --email-receiver SecurityTeam SecurityContact Brad@jinkslabs.com",
+        "description": "Create email notification group for alerts"
+      },
+      {
+        "task": "Create break-glass usage alert",
+        "command": "az monitor activity-log alert create --name \"CRITICAL-BreakGlassAccountUsed\" --resource-group <rg> --condition category=Administrative --action-group <action-group-id>",
+        "description": "Alert when emergency accounts are used"
+      },
+      {
+        "task": "List all alert rules",
+        "command": "az monitor activity-log alert list --output table",
+        "description": "View configured alert rules"
+      }
+    ],
+    "sentinel_siem": [
+      {
+        "task": "Check Sentinel status",
+        "command": "az sentinel workspace list --output table",
+        "description": "Verify if Sentinel is enabled"
+      },
+      {
+        "task": "Enable Sentinel on workspace",
+        "command": "az sentinel workspace-manager create --resource-group <rg> --workspace-name jinkslabs-logs",
+        "description": "Activate Sentinel SIEM capabilities"
+      }
+    ],
+    "policy_compliance": [
+      {
+        "task": "List policy assignments",
+        "command": "az policy assignment list --output table",
+        "description": "View all assigned Azure policies"
+      },
+      {
+        "task": "Check policy compliance",
+        "command": "az policy state summarize",
+        "description": "Review compliance status across resources"
+      },
+      {
+        "task": "List non-compliant resources",
+        "command": "az policy state list --filter \"ComplianceState eq 'NonCompliant'\" --query \"[].{Resource:resourceId, Policy:policyDefinitionName}\" -o table",
+        "description": "Show resources failing policy checks"
+      }
+    ]
+  },
+  "quick_reference": {
+    "immediate_actions_summary": {
+      "title": "5-Hour Quick Start",
+      "total_time": "5-6 hours",
+      "total_cost": "$18/month",
+      "steps": [
+        {
+          "step": 1,
+          "name": "Create break-glass accounts",
+          "time": "30 minutes",
+          "why": "Prevents complete lockout"
+        },
+        {
+          "step": 2,
+          "name": "Enable Conditional Access policies",
+          "time": "2 hours",
+          "why": "Enforces MFA, blocks legacy auth"
+        },
+        {
+          "step": 3,
+          "name": "Enable Defender for Cloud plans",
+          "time": "30 minutes",
+          "why": "Threat detection for storage and Key Vault"
+        },
+        {
+          "step": 4,
+          "name": "Apply resource locks",
+          "time": "15 minutes",
+          "why": "Prevents accidental deletion"
+        },
+        {
+          "step": 5,
+          "name": "Enable storage protection",
+          "time": "20 minutes",
+          "why": "Protects against data loss"
+        },
+        {
+          "step": 6,
+          "name": "Configure security alerts",
+          "time": "1 hour",
+          "why": "Immediate notification of threats"
+        },
+        {
+          "step": 7,
+          "name": "Restrict network access",
+          "time": "30 minutes",
+          "why": "Limits attack surface"
+        }
+      ]
+    },
+    "validation_checklist": [
+      "3 Conditional Access policies in report-only or enabled state",
+      "4 Defender plans showing Standard tier",
+      "3 resource locks (Key Vault, Storage, Log Analytics)",
+      "Blob soft delete enabled with 14-day retention",
+      "3-5 activity log alert rules configured"
+    ]
+  },
+  "resources": {
+    "documentation_files": [
+      {
+        "filename": "azure-security-assessment.md",
+        "size": "81KB",
+        "description": "Complete security assessment with detailed findings and remediation guidance"
+      },
+      {
+        "filename": "QUICKSTART-SECURITY-REMEDIATION.md",
+        "description": "Fast-track implementation guide for critical security controls"
+      },
+      {
+        "filename": "remediation-tracker.md",
+        "description": "Phase-by-phase checklist for tracking implementation progress"
+      },
+      {
+        "filename": "COMMAND-REFERENCE.md",
+        "description": "Quick reference for common Azure CLI security commands"
+      }
+    ],
+    "microsoft_documentation": [
+      {
+        "title": "Microsoft Cloud Security Benchmark",
+        "url": "https://learn.microsoft.com/en-us/security/benchmark/azure/"
+      },
+      {
+        "title": "Conditional Access Overview",
+        "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+      },
+      {
+        "title": "Defender for Cloud Documentation",
+        "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/"
+      },
+      {
+        "title": "Microsoft Sentinel Documentation",
+        "url": "https://learn.microsoft.com/en-us/azure/sentinel/"
+      },
+      {
+        "title": "Privileged Identity Management",
+        "url": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+      }
+    ]
+  }
+}

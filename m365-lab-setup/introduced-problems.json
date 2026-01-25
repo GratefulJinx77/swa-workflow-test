@@ -1,0 +1,254 @@
+[
+  {
+    "Details": "aruntime@8k8232.onmicrosoft.com",
+    "Description": "User missing manager: Apoc Runtime",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:21"
+  },
+  {
+    "Details": "asmith@8k8232.onmicrosoft.com",
+    "Description": "User missing manager: Agent Smith",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:21"
+  },
+  {
+    "Details": "bflipper@8k8232.onmicrosoft.com",
+    "Description": "User missing manager: Bit Flipper",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:21"
+  },
+  {
+    "Details": "csmith@8k8232.onmicrosoft.com",
+    "Description": "User missing manager: Cypher Smith",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:21"
+  },
+  {
+    "Details": "dprocess@8k8232.onmicrosoft.com",
+    "Description": "User missing manager: Daemon Process",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:22"
+  },
+  {
+    "Details": "adwyer@8k8232.onmicrosoft.com",
+    "Description": "User missing department: Andy Dwyer",
+    "Severity": "Low",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:24"
+  },
+  {
+    "Details": "aludgate@8k8232.onmicrosoft.com",
+    "Description": "User missing department: April Ludgate",
+    "Severity": "Low",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:25"
+  },
+  {
+    "Details": "aperkins@8k8232.onmicrosoft.com",
+    "Description": "User missing department: Ann Perkins",
+    "Severity": "Low",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:26"
+  },
+  {
+    "Details": "AlexW@8k8232.onmicrosoft.com",
+    "Description": "User missing office location: Alex Wilber",
+    "Severity": "Low",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:28"
+  },
+  {
+    "Details": "hcrane@8k8232.onmicrosoft.com",
+    "Description": "User missing office location: Harry Crane",
+    "Severity": "Low",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:30"
+  },
+  {
+    "Details": "jholloway@8k8232.onmicrosoft.com",
+    "Description": "User missing office location: Joan Holloway",
+    "Severity": "Low",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:31"
+  },
+  {
+    "Details": "testaccount2019@8k8232.onmicrosoft.com",
+    "Description": "Stale/disabled account: Test Account 2019",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:32"
+  },
+  {
+    "Details": "tempcontractor@8k8232.onmicrosoft.com",
+    "Description": "Stale/disabled account: Temp Contractor",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:32"
+  },
+  {
+    "Details": "oldsvcaccount@8k8232.onmicrosoft.com",
+    "Description": "Stale/disabled account: Old Service Account",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:33"
+  },
+  {
+    "Details": "departeduser@8k8232.onmicrosoft.com",
+    "Description": "Stale/disabled account: Departed Employee",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:33"
+  },
+  {
+    "Details": "fakeadmin@8k8232.onmicrosoft.com",
+    "Description": "Account with misleading admin-like name: Admin",
+    "Severity": "High",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:34"
+  },
+  {
+    "Details": "fakeitsupport@8k8232.onmicrosoft.com",
+    "Description": "Account with misleading admin-like name: IT Support",
+    "Severity": "High",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:35"
+  },
+  {
+    "Details": "abandoned-project",
+    "Description": "Empty group: Abandoned Project Team",
+    "Severity": "Low",
+    "Category": "Groups",
+    "Timestamp": "2026-01-23 10:54:35"
+  },
+  {
+    "Details": "legacy-system",
+    "Description": "Empty group: Legacy System Users",
+    "Severity": "Low",
+    "Category": "Groups",
+    "Timestamp": "2026-01-23 10:54:36"
+  },
+  {
+    "Details": "2019-interns",
+    "Description": "Empty group: 2019 Interns",
+    "Severity": "Low",
+    "Category": "Groups",
+    "Timestamp": "2026-01-23 10:54:36"
+  },
+  {
+    "Details": "orphaned-security",
+    "Description": "Group without owner: Orphaned Security Group",
+    "Severity": "Medium",
+    "Category": "Groups",
+    "Timestamp": "2026-01-23 10:54:37"
+  },
+  {
+    "Details": "ownerless-dist",
+    "Description": "Group without owner: Ownerless Distribution",
+    "Severity": "Medium",
+    "Category": "Groups",
+    "Timestamp": "2026-01-23 10:54:38"
+  },
+  {
+    "Details": "external-collab",
+    "Description": "M365 group potentially sharing externally: External Collaboration Space",
+    "Severity": "High",
+    "Category": "Compliance",
+    "Timestamp": "2026-01-23 10:54:39"
+  },
+  {
+    "Details": "svc-backup@8k8232.onmicrosoft.com",
+    "Description": "Service account created: Backup Service Account",
+    "Severity": "High",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:39"
+  },
+  {
+    "Details": "Helpdesk Admin, Groups Admin, License Admin",
+    "Description": "User with multiple admin roles: Tony Stark",
+    "Severity": "High",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:43"
+  },
+  {
+    "Details": "Has Application.ReadWrite.All, Directory.ReadWrite.All, RoleManagement.ReadWrite.Directory",
+    "Description": "App registration with excessive Graph permissions: Legacy Integration App",
+    "Severity": "Critical",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:44"
+  },
+  {
+    "Details": "No owner assigned",
+    "Description": "App registration without owner: Orphaned Automation App",
+    "Severity": "Medium",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:45"
+  },
+  {
+    "Details": "Secret expires in 30 days",
+    "Description": "App with expiring credentials: CRM Integration",
+    "Severity": "High",
+    "Category": "Operations",
+    "Timestamp": "2026-01-23 10:54:46"
+  },
+  {
+    "Details": "vendor-guest@8k8232.onmicrosoft.com",
+    "Description": "External/guest user account: External Vendor",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:48"
+  },
+  {
+    "Details": "partner-guest@8k8232.onmicrosoft.com",
+    "Description": "External/guest user account: Partner Contact",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:48"
+  },
+  {
+    "Details": "consultant-guest@8k8232.onmicrosoft.com",
+    "Description": "External/guest user account: Consultant Access",
+    "Severity": "Medium",
+    "Category": "Identity",
+    "Timestamp": "2026-01-23 10:54:49"
+  },
+  {
+    "Details": "Check Authentication Methods policies",
+    "Description": "Legacy authentication protocols may be enabled",
+    "Severity": "High",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:49"
+  },
+  {
+    "Details": "Users can authenticate without MFA",
+    "Description": "No Conditional Access policies enforcing MFA",
+    "Severity": "Critical",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:49"
+  },
+  {
+    "Details": "Check Azure AD > Properties > Security defaults",
+    "Description": "Security defaults may not be enabled",
+    "Severity": "High",
+    "Category": "Security",
+    "Timestamp": "2026-01-23 10:54:49"
+  },
+  {
+    "Details": "5 users with PII access, no data loss prevention",
+    "Description": "Group handling PII without DLP policy: PII Data Handlers",
+    "Severity": "Critical",
+    "Category": "Compliance",
+    "Timestamp": "2026-01-23 10:54:51"
+  },
+  {
+    "Details": "eu-data-team - No retention policy configured",
+    "Description": "EU data handling group without verified GDPR compliance",
+    "Severity": "Critical",
+    "Category": "Compliance",
+    "Timestamp": "2026-01-23 10:54:52"
+  }
+]

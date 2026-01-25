@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Security Assessment - Jinks Labs</title>
+    <style>
+        /* CSS Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Color Palette */
+            --bg-dark-1: #1a1a2e;
+            --bg-dark-2: #16213e;
+            --bg-dark-3: #0f3460;
+            --bg-card: #1e2a47;
+            --bg-card-hover: #243352;
+
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8cc;
+            --text-muted: #7d8499;
+
+            /* Risk Colors */
+            --risk-critical: #ff4444;
+            --risk-high: #ff9500;
+            --risk-medium: #ffd700;
+            --risk-low: #4caf50;
+            --risk-info: #2196F3;
+
+            /* Accent Colors */
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7c4dff;
+
+            /* UI Elements */
+            --border-color: #2a3f5f;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --success: #4caf50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 50%, var(--bg-dark-3) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Fixed Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-color);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .risk-badge {
+            background: var(--risk-high);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        /* Executive Summary Section */
+        .exec-summary {
+            margin-bottom: 2rem;
+        }
+
+        .overview-text {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-primary);
+            margin-bottom: 2rem;
+        }
+
+        .overview-text p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-detail {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .severity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .severity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+        }
+
+        .severity-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .severity-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .severity-count {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        /* Critical Findings */
+        .findings-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .finding-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .finding-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .finding-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .finding-main {
+            flex: 1;
+        }
+
+        .finding-id {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .finding-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .finding-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cvss-score {
+            background: var(--risk-critical);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .finding-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .finding-content {
+            padding: 0 1.5rem 1.5rem;
+            display: none;
+        }
+
+        .finding-content.expanded {
+            display: block;
+        }
+
+        .finding-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .finding-section h4 {
+            font-size: 0.95rem;
+            color: var(--accent-primary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .finding-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .finding-section li {
+            padding: 0.4rem 0 0.4rem 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .finding-section li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        /* Accordion Sections */
+        .accordion {
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .accordion-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .accordion-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .accordion-content {
+            padding: 0 1.5rem 1.5rem;
+            display: none;
+        }
+
+        .accordion-content.expanded {
+            display: block;
+        }
+
+        /* Phase Cards */
+        .phase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .phase-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-primary);
+            color: var(--bg-dark-1);
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+
+        .phase-header {
+            margin-bottom: 1rem;
+        }
+
+        .phase-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-timeline {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-goal {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .phase-metrics {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .phase-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .priority-section {
+            margin-bottom: 1rem;
+        }
+
+        .priority-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .task-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .task-list li {
+            padding: 0.4rem 0 0.4rem 1.2rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .task-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+        }
+
+        /* Checklist */
+        .checklist {
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .checklist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .progress-container {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-dark-2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-dark-2);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: var(--bg-dark-1);
+            border-color: var(--accent-primary);
+        }
+
+        .checklist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-dark-2);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .checklist-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .checklist-item.completed {
+            opacity: 0.6;
+        }
+
+        .checklist-item.completed .task-text {
+            text-decoration: line-through;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 0.2rem;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .task-category {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* Command Reference */
+        .command-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .command-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .command-item {
+            background: var(--bg-dark-2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .command-task {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent-primary);
+        }
+
+        .command-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .command-code {
+            position: relative;
+        }
+
+        .command-code pre {
+            background: var(--bg-dark-1);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .command-code code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--accent-primary);
+            color: var(--bg-dark-1);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-secondary);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 2px solid var(--border-color);
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-primary);
+            color: var(--bg-dark-1);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+
+        .footer-meta {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-meta span {
+            margin: 0 0.5rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .header {
+                position: static;
+                background: white;
+                border-bottom: 2px solid black;
+            }
+
+            .container {
+                padding-top: 1rem;
+            }
+
+            .finding-content,
+            .accordion-content {
+                display: block !important;
+            }
+
+            .export-buttons,
+            .filter-buttons,
+            .copy-btn {
+                display: none;
+            }
+
+            .metric-card,
+            .finding-card,
+            .phase-card,
+            .accordion {
+                break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .header-nav {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .container {
+                padding: 8rem 1rem 1rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .phase-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .finding-meta {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .checklist-header {
+                flex-direction: column;
+            }
+
+            .filter-buttons {
+                width: 100%;
+            }
+
+            .filter-btn {
+                flex: 1;
+                min-width: 80px;
+            }
+        }
+
+        /* Risk Level Colors */
+        .risk-critical { background: var(--risk-critical); color: white; }
+        .risk-high { background: var(--risk-high); color: white; }
+        .risk-medium { background: var(--risk-medium); color: var(--bg-dark-1); }
+        .risk-low { background: var(--risk-low); color: white; }
+        .risk-info { background: var(--risk-info); color: white; }
+
+        /* Utility Classes */
+        .text-critical { color: var(--risk-critical); }
+        .text-high { color: var(--risk-high); }
+        .text-medium { color: var(--risk-medium); }
+        .text-low { color: var(--risk-low); }
+        .text-info { color: var(--risk-info); }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Azure Security Assessment</h1>
+            <span class="risk-badge">MODERATE-HIGH</span>
+        </div>
+        <nav class="header-nav">
+            <a class="nav-link" onclick="scrollToSection('exec-summary')">Summary</a>
+            <a class="nav-link" onclick="scrollToSection('critical-findings')">Critical Findings</a>
+            <a class="nav-link" onclick="scrollToSection('roadmap')">Roadmap</a>
+            <a class="nav-link" onclick="scrollToSection('checklist')">Checklist</a>
+            <a class="nav-link" onclick="scrollToSection('commands')">Commands</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Executive Summary -->
+        <section id="exec-summary" class="exec-summary">
+            <div class="section-header">
+                <h2 class="section-title">Executive Summary</h2>
+            </div>
+
+            <div class="overview-text">
+                <p>This assessment evaluates the security posture of the Jinks Labs Azure tenant across seven critical domains. The environment consists of <strong>5 Static Web Apps</strong>, <strong>1 Storage Account</strong>, <strong>1 Lab Plan</strong>, <strong>1 Key Vault</strong>, and <strong>1 Log Analytics workspace</strong>.</p>
+                <p style="margin-top: 0.75rem;"><strong>Tenant:</strong> jinkslabs.com (5a62aa80-bceb-44d3-9879-b4a48deb66de)<br>
+                <strong>Subscription:</strong> Primary PAYG (86010fa7-268b-4d8e-95a6-6e0fab75c06c)<br>
+                <strong>Assessment Date:</strong> January 22, 2026 | <strong>Next Review:</strong> April 22, 2026</p>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <!-- Risk Rating Card -->
+                <div class="metric-card">
+                    <div class="metric-label">Overall Risk Rating</div>
+                    <div class="metric-value text-high">MODERATE-HIGH</div>
+                    <div class="metric-detail">Requires immediate attention</div>
+                </div>
+
+                <!-- Findings by Severity -->
+                <div class="metric-card">
+                    <div class="metric-label">Findings by Severity</div>
+                    <div class="severity-list">
+                        <div class="severity-item">
+                            <div class="severity-label">
+                                <span class="severity-dot" style="background: var(--risk-critical);"></span>
+                                <span>Critical</span>
+                            </div>
+                            <span class="severity-count text-critical">3</span>
+                        </div>
+                        <div class="severity-item">
+                            <div class="severity-label">
+                                <span class="severity-dot" style="background: var(--risk-high);"></span>
+                                <span>High</span>
+                            </div>
+                            <span class="severity-count text-high">8</span>
+                        </div>
+                        <div class="severity-item">
+                            <div class="severity-label">
+                                <span class="severity-dot" style="background: var(--risk-medium);"></span>
+                                <span>Medium</span>
+                            </div>
+                            <span class="severity-count text-medium">12</span>
+                        </div>
+                        <div class="severity-item">
+                            <div class="severity-label">
+                                <span class="severity-dot" style="background: var(--risk-info);"></span>
+                                <span>Informational</span>
+                            </div>
+                            <span class="severity-count text-info">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secure Score -->
+                <div class="metric-card">
+                    <div class="metric-label">Azure Secure Score</div>
+                    <div class="metric-value">TBD</div>
+                    <div class="metric-detail">Target: 80%+</div>
+                </div>
+
+                <!-- Environment Inventory -->
+                <div class="metric-card">
+                    <div class="metric-label">Environment Inventory</div>
+                    <div class="severity-list">
+                        <div class="severity-item">
+                            <span>Static Web Apps</span>
+                            <span class="severity-count">5</span>
+                        </div>
+                        <div class="severity-item">
+                            <span>Storage Accounts</span>
+                            <span class="severity-count">1</span>
+                        </div>
+                        <div class="severity-item">
+                            <span>Key Vaults</span>
+                            <span class="severity-count">1</span>
+                        </div>
+                        <div class="severity-item">
+                            <span>Log Analytics</span>
+                            <span class="severity-count">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Critical Findings -->
+        <section id="critical-findings" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Critical Findings</h2>
+                <span class="metric-detail">5 issues requiring immediate attention</span>
+            </div>
+
+            <div class="findings-grid">
+                <!-- Finding 1 -->
+                <div class="finding-card">
+                    <div class="finding-header" onclick="toggleFinding(this)">
+                        <div class="finding-main">
+                            <div class="finding-id">C-IAM-01</div>
+                            <h3 class="finding-title">No Conditional Access Policies Detected</h3>
+                            <div class="finding-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">CVSS Score</span>
+                                    <span class="cvss-score">8.1</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Time to Fix</span>
+                                    <span class="meta-value">4 hours</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Cost Impact</span>
+                                    <span class="meta-value">Included</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="finding-badge risk-critical">CRITICAL</span>
+                        </div>
+                    </div>
+                    <div class="finding-content">
+                        <div class="finding-section">
+                            <h4>Description</h4>
+                            <p style="color: var(--text-secondary);">There is no evidence of Conditional Access (CA) policies configured. While MFA is enabled for your account, without CA policies, MFA enforcement is inconsistent and lacks risk-based controls.</p>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Impact</h4>
+                            <ul>
+                                <li>No location-based access restrictions</li>
+                                <li>No device compliance requirements</li>
+                                <li>No application-specific controls</li>
+                                <li>No session management policies</li>
+                                <li>Lack of defense-in-depth for privileged accounts</li>
+                            </ul>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Remediation Summary</h4>
+                            <p style="color: var(--text-secondary);">Implement baseline Conditional Access policies including MFA for all users, MFA for Azure management, block legacy authentication, require compliant devices for privileged roles, and block access from untrusted locations for admin accounts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finding 2 -->
+                <div class="finding-card">
+                    <div class="finding-header" onclick="toggleFinding(this)">
+                        <div class="finding-main">
+                            <div class="finding-id">C-IAM-02</div>
+                            <h3 class="finding-title">No Break-Glass Account Configuration Validated</h3>
+                            <div class="finding-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">CVSS Score</span>
+                                    <span class="cvss-score">7.5</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Time to Fix</span>
+                                    <span class="meta-value">1 hour</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Cost Impact</span>
+                                    <span class="meta-value">No cost</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="finding-badge risk-critical">CRITICAL</span>
+                        </div>
+                    </div>
+                    <div class="finding-content">
+                        <div class="finding-section">
+                            <h4>Description</h4>
+                            <p style="color: var(--text-secondary);">Emergency access (break-glass) accounts are essential to prevent complete lockout from Entra ID during CA policy misconfigurations or MFA service disruptions.</p>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Impact</h4>
+                            <ul>
+                                <li>Risk of complete tenant lockout during CA policy errors</li>
+                                <li>No recovery mechanism if MFA services fail</li>
+                                <li>Extended downtime during authentication service disruptions</li>
+                            </ul>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Remediation Summary</h4>
+                            <p style="color: var(--text-secondary);">Create 2 emergency access accounts with long randomly generated passwords, assign Global Administrator role, exclude from all Conditional Access policies, and configure alerts for any use.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finding 3 -->
+                <div class="finding-card">
+                    <div class="finding-header" onclick="toggleFinding(this)">
+                        <div class="finding-main">
+                            <div class="finding-id">C-IAM-03</div>
+                            <h3 class="finding-title">Privileged Identity Management (PIM) Not Configured</h3>
+                            <div class="finding-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">CVSS Score</span>
+                                    <span class="cvss-score">8.2</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Time to Fix</span>
+                                    <span class="meta-value">4-6 hours</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Cost Impact</span>
+                                    <span class="meta-value">$9/month</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="finding-badge risk-critical">CRITICAL</span>
+                        </div>
+                    </div>
+                    <div class="finding-content">
+                        <div class="finding-section">
+                            <h4>Description</h4>
+                            <p style="color: var(--text-secondary);">Highly privileged roles (Owner, Security Admin) appear to be permanently assigned rather than just-in-time (JIT) activated through PIM.</p>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Impact</h4>
+                            <ul>
+                                <li>Permanent privileged access increases attack surface</li>
+                                <li>No time-bounded access to sensitive operations</li>
+                                <li>Lack of approval workflows for sensitive role activations</li>
+                                <li>Insufficient audit trail for privileged operations</li>
+                                <li>Violates least privilege principle</li>
+                            </ul>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Remediation Summary</h4>
+                            <p style="color: var(--text-secondary);">Enable Entra ID P2 licensing, configure PIM for Azure Resources and Entra ID roles, convert Owner and Security Admin roles to eligible assignments, set maximum activation duration to 8 hours, require MFA and justification for activation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finding 4 -->
+                <div class="finding-card">
+                    <div class="finding-header" onclick="toggleFinding(this)">
+                        <div class="finding-main">
+                            <div class="finding-id">C-MON-01</div>
+                            <h3 class="finding-title">Microsoft Defender for Cloud Not Fully Enabled</h3>
+                            <div class="finding-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">CVSS Score</span>
+                                    <span class="cvss-score">8.5</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Time to Fix</span>
+                                    <span class="meta-value">30 minutes</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Cost Impact</span>
+                                    <span class="meta-value">$18/month</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="finding-badge risk-critical">CRITICAL</span>
+                        </div>
+                    </div>
+                    <div class="finding-content">
+                        <div class="finding-section">
+                            <h4>Description</h4>
+                            <p style="color: var(--text-secondary);">Microsoft Defender for Cloud enhanced security features (Defender plans) are not confirmed as enabled for Storage, Key Vault, Resource Manager, and DNS.</p>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Impact</h4>
+                            <ul>
+                                <li>No vulnerability assessment for VMs</li>
+                                <li>No file integrity monitoring</li>
+                                <li>Limited threat detection for PaaS services</li>
+                                <li>No Defender for Storage (malware scanning, sensitive data threat detection)</li>
+                                <li>No Defender for Key Vault (suspicious access detection)</li>
+                            </ul>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Remediation Summary</h4>
+                            <p style="color: var(--text-secondary);">Enable Defender for Storage, Key Vault, Resource Manager, and DNS at Standard tier.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finding 5 -->
+                <div class="finding-card">
+                    <div class="finding-header" onclick="toggleFinding(this)">
+                        <div class="finding-main">
+                            <div class="finding-id">C-MON-02</div>
+                            <h3 class="finding-title">Microsoft Sentinel (SIEM) Not Deployed</h3>
+                            <div class="finding-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">CVSS Score</span>
+                                    <span class="cvss-score">8.3</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Time to Fix</span>
+                                    <span class="meta-value">6-8 hours</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Cost Impact</span>
+                                    <span class="meta-value">$12-25/month</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="finding-badge risk-critical">CRITICAL</span>
+                        </div>
+                    </div>
+                    <div class="finding-content">
+                        <div class="finding-section">
+                            <h4>Description</h4>
+                            <p style="color: var(--text-secondary);">While a Log Analytics workspace exists, Microsoft Sentinel SIEM is not confirmed as enabled for security event correlation and threat hunting.</p>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Impact</h4>
+                            <ul>
+                                <li>No centralized security event correlation</li>
+                                <li>No automated incident creation from multiple alert sources</li>
+                                <li>No threat hunting capabilities</li>
+                                <li>No SOAR playbooks for automated response</li>
+                                <li>Manual investigation of security events required</li>
+                                <li>Limited detection of multi-stage attacks</li>
+                            </ul>
+                        </div>
+                        <div class="finding-section">
+                            <h4>Remediation Summary</h4>
+                            <p style="color: var(--text-secondary);">Deploy Microsoft Sentinel on existing Log Analytics workspace, configure data connectors (Activity Log, Entra ID, Defender for Cloud), enable priority analytics rules, and develop SOAR playbooks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Remediation Roadmap -->
+        <section id="roadmap" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Remediation Roadmap</h2>
+            </div>
+
+            <div class="phase-grid">
+                <!-- Phase 1 -->
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <div class="phase-header">
+                        <h3 class="phase-title">Immediate Actions</h3>
+                        <div class="phase-timeline">Week 1-2</div>
+                        <div class="phase-goal">Reduce critical risk exposure</div>
+                    </div>
+                    <div class="phase-metrics">
+                        <div class="phase-metric">
+                            <span class="meta-label">Effort</span>
+                            <span class="meta-value">8-10 hours</span>
+                        </div>
+                        <div class="phase-metric">
+                            <span class="meta-label">Cost</span>
+                            <span class="meta-value">$18/month</span>
+                        </div>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">1.1 Identity Protection Foundation</div>
+                        <ul class="task-list">
+                            <li>Create break-glass accounts (1 hour)</li>
+                            <li>Enable baseline Conditional Access policies (4 hours)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">1.2 Threat Detection Baseline</div>
+                        <ul class="task-list">
+                            <li>Enable Defender for Cloud enhanced plans (30 min)</li>
+                            <li>Configure critical alert rules (2 hours)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">1.3 Data Protection</div>
+                        <ul class="task-list">
+                            <li>Enable blob soft delete and versioning (30 min)</li>
+                            <li>Implement resource locks (30 min)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <div class="phase-header">
+                        <h3 class="phase-title">High Priority</h3>
+                        <div class="phase-timeline">Week 3-4</div>
+                        <div class="phase-goal">Implement defense-in-depth and comprehensive monitoring</div>
+                    </div>
+                    <div class="phase-metrics">
+                        <div class="phase-metric">
+                            <span class="meta-label">Effort</span>
+                            <span class="meta-value">25-30 hours</span>
+                        </div>
+                        <div class="phase-metric">
+                            <span class="meta-label">Cost</span>
+                            <span class="meta-value">$21-34/month</span>
+                        </div>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">2.1 Privileged Access Management</div>
+                        <ul class="task-list">
+                            <li>Enable Entra ID P2 licensing (1 hour)</li>
+                            <li>Configure PIM for Owner and Security Admin (4 hours)</li>
+                            <li>Implement quarterly access reviews (2 hours)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">2.2 Network Security Hardening</div>
+                        <ul class="task-list">
+                            <li>Configure Storage Account firewall (2 hours)</li>
+                            <li>Configure Key Vault network restrictions (1 hour)</li>
+                            <li>Review Static Web Apps access restrictions (2h per app)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">2.3 Comprehensive Logging and SIEM</div>
+                        <ul class="task-list">
+                            <li>Deploy Microsoft Sentinel (4 hours)</li>
+                            <li>Configure data connectors (2 hours)</li>
+                            <li>Enable priority analytics rules (4 hours)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <div class="phase-header">
+                        <h3 class="phase-title">Medium Priority</h3>
+                        <div class="phase-timeline">Month 2</div>
+                        <div class="phase-goal">Establish governance and compliance framework</div>
+                    </div>
+                    <div class="phase-metrics">
+                        <div class="phase-metric">
+                            <span class="meta-label">Effort</span>
+                            <span class="meta-value">27 hours</span>
+                        </div>
+                        <div class="phase-metric">
+                            <span class="meta-label">Cost</span>
+                            <span class="meta-value">$0/month</span>
+                        </div>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">3.1 Policy Governance</div>
+                        <ul class="task-list">
+                            <li>Implement Azure Policy framework (8 hours)</li>
+                            <li>Configure deny policies for high-risk ops (4 hours)</li>
+                            <li>Establish policy compliance monitoring (2 hours)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">3.2 Compliance Posture</div>
+                        <ul class="task-list">
+                            <li>Enable regulatory compliance assessments (2 hours)</li>
+                            <li>Implement resource tagging strategy (4 hours)</li>
+                            <li>Configure cost anomaly detection (1 hour)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">3.3 Identity Hardening</div>
+                        <ul class="task-list">
+                            <li>Block legacy authentication protocols (2 hours)</li>
+                            <li>Configure password protection policies (1 hour)</li>
+                            <li>Implement sign-in and user risk policies (3 hours)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Phase 4 -->
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <div class="phase-header">
+                        <h3 class="phase-title">Optimization</h3>
+                        <div class="phase-timeline">Month 3+</div>
+                        <div class="phase-goal">Advanced security and operational excellence</div>
+                    </div>
+                    <div class="phase-metrics">
+                        <div class="phase-metric">
+                            <span class="meta-label">Effort</span>
+                            <span class="meta-value">50 hours</span>
+                        </div>
+                        <div class="phase-metric">
+                            <span class="meta-label">Cost</span>
+                            <span class="meta-value">$20-355/month</span>
+                        </div>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">4.1 Advanced Threat Detection</div>
+                        <ul class="task-list">
+                            <li>Enable UEBA in Sentinel (2 hours)</li>
+                            <li>Configure custom threat hunting queries (8 hours)</li>
+                            <li>Develop SOAR playbooks for automated response (16 hours)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">4.2 Network Defense in Depth</div>
+                        <ul class="task-list">
+                            <li>Evaluate Azure Front Door + WAF (optional, $330/month)</li>
+                            <li>Implement Private Link for Key Vault and Storage (8h)</li>
+                        </ul>
+                    </div>
+                    <div class="priority-section">
+                        <div class="priority-title">4.3 Advanced Data Protection</div>
+                        <ul class="task-list">
+                            <li>Evaluate customer-managed encryption keys (optional)</li>
+                            <li>Implement data lifecycle management policies (2 hours)</li>
+                            <li>Configure immutable storage for compliance (optional)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Checklist -->
+        <section id="checklist" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Interactive Checklist</h2>
+            </div>
+
+            <div class="checklist">
+                <div class="checklist-header">
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Overall Progress</span>
+                            <span id="progress-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterChecklist('all')">All</button>
+                        <button class="filter-btn" onclick="filterChecklist('phase_1_immediate')">Phase 1</button>
+                        <button class="filter-btn" onclick="filterChecklist('phase_2_high_priority')">Phase 2</button>
+                        <button class="filter-btn" onclick="filterChecklist('phase_3_medium_priority')">Phase 3</button>
+                        <button class="filter-btn" onclick="filterChecklist('phase_4_optimization')">Phase 4</button>
+                    </div>
+                </div>
+
+                <div id="checklist-items" class="checklist-items">
+                    <!-- Checklist items will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Command Reference -->
+        <section id="commands" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Quick Reference Commands</h2>
+            </div>
+
+            <!-- Commands Accordion -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div>
+                        <div class="accordion-title">Identity and Access Management</div>
+                        <div class="accordion-subtitle">Conditional Access, Break-Glass Accounts, Role Assignments</div>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="command-section">
+                        <div class="command-item">
+                            <div class="command-task">List Conditional Access policies</div>
+                            <div class="command-description">View all CA policies and their status</div>
+                            <div class="command-code">
+                                <pre><code>az rest --method GET \
+  --uri "https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies" \
+  --query "value[].{Name:displayName, State:state}" -o table</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Create break-glass account</div>
+                            <div class="command-description">Generate strong password and create emergency access account</div>
+                            <div class="command-code">
+                                <pre><code>PASSWORD=$(openssl rand -base64 32)
+az ad user create \
+  --display-name "Emergency Access Account 01" \
+  --user-principal-name breakglass01@jinkslabs.com \
+  --password "$PASSWORD" \
+  --force-change-password-next-sign-in false</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">List privileged role assignments</div>
+                            <div class="command-description">Show users with high-privilege roles</div>
+                            <div class="command-code">
+                                <pre><code>az role assignment list \
+  --scope "/subscriptions/86010fa7-268b-4d8e-95a6-6e0fab75c06c" \
+  --query "[?roleDefinitionName=='Owner' || roleDefinitionName=='Contributor']" -o table</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div>
+                        <div class="accordion-title">Microsoft Defender for Cloud</div>
+                        <div class="accordion-subtitle">Enable Defender Plans, Security Alerts, Pricing</div>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="command-section">
+                        <div class="command-item">
+                            <div class="command-task">Check Defender plans status</div>
+                            <div class="command-description">View all Defender plans and their pricing tier</div>
+                            <div class="command-code">
+                                <pre><code>az security pricing list --output table</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Enable Defender for Storage</div>
+                            <div class="command-description">Activate threat detection for storage</div>
+                            <div class="command-code">
+                                <pre><code>az security pricing create --name StorageAccounts --tier Standard</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Enable Defender for Key Vault</div>
+                            <div class="command-description">Activate threat detection for Key Vault</div>
+                            <div class="command-code">
+                                <pre><code>az security pricing create --name KeyVaults --tier Standard</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">List security alerts</div>
+                            <div class="command-description">View recent security alerts</div>
+                            <div class="command-code">
+                                <pre><code>az security alert list \
+  --query "[].{Name:alertDisplayName, Severity:severity, Status:status}" -o table</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div>
+                        <div class="accordion-title">Network Security</div>
+                        <div class="accordion-subtitle">Firewall Configuration, IP Restrictions</div>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="command-section">
+                        <div class="command-item">
+                            <div class="command-task">Get current public IP</div>
+                            <div class="command-description">Retrieve your current public IP address</div>
+                            <div class="command-code">
+                                <pre><code>curl -s ifconfig.me</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Configure Storage Account firewall</div>
+                            <div class="command-description">Restrict storage access to specific IPs</div>
+                            <div class="command-code">
+                                <pre><code>az storage account update --name oldshrimproad001 --default-action Deny
+az storage account network-rule add --account-name oldshrimproad001 --ip-address "YOUR_IP/32"</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Configure Key Vault firewall</div>
+                            <div class="command-description">Restrict Key Vault access to specific IPs</div>
+                            <div class="command-code">
+                                <pre><code>az keyvault update --name jinkslabs-vault --default-action Deny
+az keyvault network-rule add --name jinkslabs-vault --ip-address "YOUR_IP/32"</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div>
+                        <div class="accordion-title">Data Protection</div>
+                        <div class="accordion-subtitle">Soft Delete, Versioning, Backup</div>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="command-section">
+                        <div class="command-item">
+                            <div class="command-task">Enable blob soft delete</div>
+                            <div class="command-description">Enable 14-day recovery for deleted blobs</div>
+                            <div class="command-code">
+                                <pre><code>az storage blob service-properties delete-policy update \
+  --account-name oldshrimproad001 \
+  --enable true \
+  --days-retained 14</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Enable blob versioning</div>
+                            <div class="command-description">Track all blob versions for recovery</div>
+                            <div class="command-code">
+                                <pre><code>az storage account blob-service-properties update \
+  --account-name oldshrimproad001 \
+  --enable-versioning true</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Check soft delete status</div>
+                            <div class="command-description">Verify soft delete configuration</div>
+                            <div class="command-code">
+                                <pre><code>az storage blob service-properties delete-policy show \
+  --account-name oldshrimproad001</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div>
+                        <div class="accordion-title">Resource Locks</div>
+                        <div class="accordion-subtitle">Prevent Accidental Deletion</div>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="command-section">
+                        <div class="command-item">
+                            <div class="command-task">Apply lock to Key Vault</div>
+                            <div class="command-description">Prevent accidental Key Vault deletion</div>
+                            <div class="command-code">
+                                <pre><code>az lock create --name "PreventKVDeletion" --lock-type CanNotDelete \
+  --resource-group &lt;rg&gt; --resource-name jinkslabs-vault \
+  --resource-type Microsoft.KeyVault/vaults</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Apply lock to Storage Account</div>
+                            <div class="command-description">Prevent accidental storage deletion</div>
+                            <div class="command-code">
+                                <pre><code>az lock create --name "PreventStorageDeletion" --lock-type CanNotDelete \
+  --resource-group &lt;rg&gt; --resource-name oldshrimproad001 \
+  --resource-type Microsoft.Storage/storageAccounts</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">List all locks</div>
+                            <div class="command-description">View all resource locks in subscription</div>
+                            <div class="command-code">
+                                <pre><code>az lock list --output table</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div>
+                        <div class="accordion-title">Monitoring and Alerts</div>
+                        <div class="accordion-subtitle">Action Groups, Alert Rules, Notifications</div>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="command-section">
+                        <div class="command-item">
+                            <div class="command-task">Create Action Group</div>
+                            <div class="command-description">Create email notification group for alerts</div>
+                            <div class="command-code">
+                                <pre><code>az monitor action-group create --name SecurityAlerts \
+  --resource-group &lt;rg&gt; --short-name SecAlert \
+  --email-receiver SecurityTeam SecurityContact Brad@jinkslabs.com</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">Create break-glass usage alert</div>
+                            <div class="command-description">Alert when emergency accounts are used</div>
+                            <div class="command-code">
+                                <pre><code>az monitor activity-log alert create \
+  --name "CRITICAL-BreakGlassAccountUsed" \
+  --resource-group &lt;rg&gt; \
+  --condition category=Administrative \
+  --action-group &lt;action-group-id&gt;</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="command-item">
+                            <div class="command-task">List all alert rules</div>
+                            <div class="command-description">View configured alert rules</div>
+                            <div class="command-code">
+                                <pre><code>az monitor activity-log alert list --output table</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="export-buttons">
+                <button class="export-btn" onclick="window.print()">Print Dashboard</button>
+                <button class="export-btn" onclick="exportProgress()">Export Progress</button>
+            </div>
+            <div class="footer-meta">
+                <span><strong>Tenant:</strong> jinkslabs.com</span>
+                <span><strong>Assessment Date:</strong> 2026-01-22</span>
+                <span><strong>Next Review:</strong> 2026-04-22</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Checklist Data
+        const checklistData = {
+            "phase_1_immediate": [
+                { task: "Generate and securely store break-glass account passwords", category: "Identity Protection" },
+                { task: "Create breakglass01@jinkslabs.com account", category: "Identity Protection" },
+                { task: "Create breakglass02@jinkslabs.com account", category: "Identity Protection" },
+                { task: "Assign Global Administrator role to both accounts", category: "Identity Protection" },
+                { task: "Test authentication with break-glass accounts", category: "Identity Protection" },
+                { task: "Store credentials in physical safe / offline password manager", category: "Identity Protection" },
+                { task: "Create CA-001: Require MFA for All Users (report-only)", category: "Conditional Access" },
+                { task: "Create CA-002: Require MFA for Azure Management (report-only)", category: "Conditional Access" },
+                { task: "Create CA-003: Block Legacy Authentication (report-only)", category: "Conditional Access" },
+                { task: "Exclude break-glass accounts from all CA policies", category: "Conditional Access" },
+                { task: "Monitor CA policies in report-only mode for 48 hours", category: "Conditional Access" },
+                { task: "Switch CA policies from report-only to enabled", category: "Conditional Access" },
+                { task: "Enable Defender for Storage (Standard tier)", category: "Threat Detection" },
+                { task: "Enable Defender for Key Vault (Standard tier)", category: "Threat Detection" },
+                { task: "Enable Defender for Resource Manager (Standard tier)", category: "Threat Detection" },
+                { task: "Enable Defender for DNS (Standard tier)", category: "Threat Detection" },
+                { task: "Create Action Group: SecurityAlerts", category: "Monitoring" },
+                { task: "Configure alert: Break-Glass Account Usage", category: "Monitoring" },
+                { task: "Configure alert: Resource Deletion", category: "Monitoring" },
+                { task: "Configure alert: Privileged Role Assignment", category: "Monitoring" },
+                { task: "Enable blob soft delete (14-day retention)", category: "Data Protection" },
+                { task: "Enable blob versioning", category: "Data Protection" },
+                { task: "Enable container soft delete (14-day retention)", category: "Data Protection" },
+                { task: "Apply CanNotDelete lock to Key Vault", category: "Resource Protection" },
+                { task: "Apply CanNotDelete lock to Storage Account", category: "Resource Protection" },
+                { task: "Apply CanNotDelete lock to Log Analytics workspace", category: "Resource Protection" }
+            ],
+            "phase_2_high_priority": [
+                { task: "Purchase Entra ID P2 license", category: "Privileged Access" },
+                { task: "Enable PIM for Azure Resources", category: "Privileged Access" },
+                { task: "Configure PIM settings for Owner role", category: "Privileged Access" },
+                { task: "Convert Owner assignment to eligible (not permanent)", category: "Privileged Access" },
+                { task: "Configure Storage Account firewall (default: Deny)", category: "Network Security" },
+                { task: "Configure Key Vault firewall (default: Deny)", category: "Network Security" },
+                { task: "Enable Microsoft Sentinel on jinkslabs-logs workspace", category: "SIEM" },
+                { task: "Configure data connector: Azure Activity", category: "SIEM" },
+                { task: "Configure data connector: Entra ID Sign-ins", category: "SIEM" },
+                { task: "Enable diagnostic settings: Storage Account", category: "Logging" },
+                { task: "Enable diagnostic settings: Subscription Activity Log", category: "Logging" }
+            ],
+            "phase_3_medium_priority": [
+                { task: "Assign Azure Security Benchmark initiative (enforce mode)", category: "Policy Governance" },
+                { task: "Create policy: Require tags on all resources", category: "Policy Governance" },
+                { task: "Enable Azure Security Benchmark compliance assessment", category: "Compliance" },
+                { task: "Create cost budget with alerts", category: "Cost Management" },
+                { task: "Tag all Static Web Apps", category: "Resource Organization" },
+                { task: "Configure custom banned password list", category: "Identity Hardening" },
+                { task: "Audit service principals", category: "Identity Hardening" }
+            ],
+            "phase_4_optimization": [
+                { task: "Enable UEBA in Sentinel", category: "Advanced Threat Detection" },
+                { task: "Evaluate Azure Front Door + WAF requirement", category: "Network Defense" },
+                { task: "Create private endpoint: Key Vault", category: "Network Defense" },
+                { task: "Create data lifecycle management policy", category: "Data Protection" },
+                { task: "Test complete environment recovery", category: "Disaster Recovery" }
+            ]
+        };
+
+        let currentFilter = 'all';
+        let checklistState = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChecklistState();
+            renderChecklist();
+            updateProgress();
+        });
+
+        // Render checklist items
+        function renderChecklist() {
+            const container = document.getElementById('checklist-items');
+            container.innerHTML = '';
+
+            Object.keys(checklistData).forEach(phase => {
+                if (currentFilter !== 'all' && currentFilter !== phase) return;
+
+                checklistData[phase].forEach((item, index) => {
+                    const itemId = `${phase}_${index}`;
+                    const isCompleted = checklistState[itemId] || false;
+
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `checklist-item ${isCompleted ? 'completed' : ''}`;
+                    itemDiv.setAttribute('data-phase', phase);
+
+                    itemDiv.innerHTML = `
+                        <input type="checkbox" class="checkbox" id="${itemId}"
+                            ${isCompleted ? 'checked' : ''}
+                            onchange="toggleCheckbox('${itemId}')">
+                        <div class="task-info">
+                            <div class="task-text">${item.task}</div>
+                            <div class="task-category">${item.category}</div>
+                        </div>
+                    `;
+
+                    container.appendChild(itemDiv);
+                });
+            });
+        }
+
+        // Toggle checkbox
+        function toggleCheckbox(itemId) {
+            checklistState[itemId] = !checklistState[itemId];
+            saveChecklistState();
+            updateProgress();
+            renderChecklist();
+        }
+
+        // Filter checklist
+        function filterChecklist(filter) {
+            currentFilter = filter;
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderChecklist();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const totalItems = Object.keys(checklistData).reduce((sum, phase) =>
+                sum + checklistData[phase].length, 0);
+
+            const completedItems = Object.values(checklistState).filter(v => v).length;
+            const percentage = Math.round((completedItems / totalItems) * 100);
+
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+            document.getElementById('progress-text').textContent = `${percentage}% (${completedItems}/${totalItems})`;
+        }
+
+        // Save checklist state to localStorage
+        function saveChecklistState() {
+            localStorage.setItem('azureSecurityChecklist', JSON.stringify(checklistState));
+        }
+
+        // Load checklist state from localStorage
+        function loadChecklistState() {
+            const saved = localStorage.getItem('azureSecurityChecklist');
+            if (saved) {
+                checklistState = JSON.parse(saved);
+            }
+        }
+
+        // Export progress
+        function exportProgress() {
+            const totalItems = Object.keys(checklistData).reduce((sum, phase) =>
+                sum + checklistData[phase].length, 0);
+            const completedItems = Object.values(checklistState).filter(v => v).length;
+
+            let exportText = `Azure Security Assessment Progress Report\n`;
+            exportText += `Generated: ${new Date().toLocaleString()}\n`;
+            exportText += `Progress: ${completedItems}/${totalItems} (${Math.round((completedItems/totalItems)*100)}%)\n\n`;
+
+            Object.keys(checklistData).forEach(phase => {
+                const phaseLabel = phase.replace(/_/g, ' ').toUpperCase();
+                exportText += `\n${phaseLabel}\n${'='.repeat(phaseLabel.length)}\n`;
+
+                checklistData[phase].forEach((item, index) => {
+                    const itemId = `${phase}_${index}`;
+                    const status = checklistState[itemId] ? '[✓]' : '[ ]';
+                    exportText += `${status} ${item.task} (${item.category})\n`;
+                });
+            });
+
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `azure-security-progress-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Toggle finding details
+        function toggleFinding(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+
+            content.classList.toggle('expanded');
+            if (icon) icon.classList.toggle('rotated');
+        }
+
+        // Toggle accordion
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Copy command to clipboard
+        function copyCommand(button) {
+            const codeBlock = button.previousElementSibling;
+            const code = codeBlock.textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = 'var(--success)';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'var(--accent-primary)';
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll navigation
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const headerOffset = 100;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    </script>
+</body>
+</html>
